@@ -4,6 +4,8 @@ import { VueRegister } from '@idm-modules/core/regModule/vue';
 import config from '../public/static/config.json';
 //引入图标
 import '@/icons' // icon
+//引入vant组件
+import '@/plugins/vant';
 
 new VueRegister()
 const requireComponent = require.context(

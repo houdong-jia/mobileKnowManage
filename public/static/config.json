@@ -24,6 +24,13 @@
       "className": "IUserList",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.searchJump",
+      "comName": "搜索跳转",
+      "className": "ISearchJump",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }
