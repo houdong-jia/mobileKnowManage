@@ -2,12 +2,26 @@
   "version": "1.0.0",
   "lasttime": "2022-07-22 15:31:39",
   "author": "申龙",
-  "className": "basics",
+  "className": "mobileKnowManage",
   "module": [
     {
-      "classId": "idm.component.basics.text",
+      "classId": "idm.component.mobileKnowManage.text",
       "comName": "文本",
       "className": "IText",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.entrylist",
+      "comName": "词条列表",
+      "className": "IEntryList",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.userlist",
+      "comName": "用户列表",
+      "className": "IUserList",
       "comType": "common",
       "comLangue": "vue"
     }

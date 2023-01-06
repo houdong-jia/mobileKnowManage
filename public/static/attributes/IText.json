@@ -1,5 +1,5 @@
 {
-    "classId": "idm.component.basics.text",
+    "classId": "idm.component.mobileKnowManage.text",
     "comName": "文本",
     "className": "IText",
     "comType": "common",
