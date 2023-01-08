@@ -31,6 +31,13 @@
       "className": "ISearchJump",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.personalcenter",
+      "comName": "个人中心",
+      "className": "IPersonalCenter",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }
