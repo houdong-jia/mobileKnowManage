@@ -1,27 +1,72 @@
 <template>
     <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="IPersonalCenter_app">
-        IPersonalCenter
+        <div class="IPersonalCenter_app_top">
+            <div v-if="propData.showTitle" class="header flex_center">
+                <SvgIcon @click="goBack()" v-if="propData.showBackButton" icon-class="back"></SvgIcon>
+                <span>{{ propData.title || '标题' }}</span>
+            </div>
+            <div class="info flex_between">
+                <div class="info_left">
+                    <img v-if="getImageUrl()" :src="getImageUrl()" alt=""/>
+                </div>
+                <div class="info_right">
+                    <div class="name">{{ user_info[propData.dataFieldName || 'name'] }}</div>
+                    <div class="title_integral flex_between">
+                        <div class="title">
+                            称号：{{ user_info[propData.dataFieldTitle || 'title'] }}
+                        </div>
+                        <div class="integral">
+                            积分：{{ user_info[propData.dataFieldIntegral || 'integral'] }}
+                        </div>
+                    </div>
+                    <div class="department">
+                        部门：{{ user_info[propData.dataFieldDepartment || 'department'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="IPersonalCenter_app_bottom flex_between">
+            <div @click="clickGrid(item)" v-for="(item,index) in propData.labelList" :key="index" class="list">
+                <div class="number">{{ user_info[item.key] }}</div>
+                <div class="name">{{ item.name }}</div>
+            </div>
+        </div>
+        
     </div>
 </template>
   
 <script>
-import { getEntryData } from '../mock/mockData'
+import { getUserInfoData } from '../mock/mockData'
 import adaptationScreenMixin from '../mixins/adaptationScreen'
+import SvgIcon from '../icons/SvgIcon.vue';
 
 export default {
     name: 'IPersonalCenter',
     mixins: [adaptationScreenMixin],
+    components: { SvgIcon },
     data() {
         return {
             moduleObject: {},
             propData: this.$root.propData.compositeAttr || {
-                showUnderLine: true,
                 loadDataCreated: true,
-                contentLayout: 2,
+                showBackButton: true,
                 showTitle: true,
-                title: "标题",
+                labelList: [
+                    {
+                        "name": "关注的人",
+                        "key": "careNum"
+                    },
+                    {
+                        "name": "关注的标签",
+                        "key": "careLabelNum"
+                    },
+                    {
+                        "name": "关注的知识",
+                        "key": "careKnowledgeNum"
+                    }
+                ]
             },
-            data_list: [],
+            user_info: {},
             demand_params: {},
             conditionObject: {},
         }
@@ -45,9 +90,34 @@ export default {
     },
     destroyed() { },
     methods: {
+        goBack() {
+            if( this.moduleObject.env=="develop" ){
+                return;
+            }
+            let that = this;
+            let urlObject = window.IDM.url.queryObject(),
+            pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+            var clickFunction = this.propData.clickFunctionBack;
+            clickFunction&&clickFunction.forEach(item=>{
+                window[item.name]&&window[item.name].call(this,{
+                    urlData:urlObject,
+                    pageId,
+                    customParam:item.param,
+                    _this:this
+                });
+            })
+        },
+        getImageUrl() {
+            if ( this.user_info[this.propData.dataFieldImageUrl ? this.propData.dataFieldImageUrl : 'imageUrl'] ) {
+                return IDM.url.getWebPath(this.user_info[this.propData.dataFieldImageUrl ? this.propData.dataFieldImageUrl : 'imageUrl'])
+            } else {
+                return IDM.url.getModuleAssetsWebPath(require(`../assets/user.png`),this.moduleObject)
+            }
+        },
         clickGrid(item) {
-            if ( item[this.propData.dataFieldUrl ? this.propData.dataFieldUrl : 'jumpUrl'] ) {
-                window.open(item[this.propData.dataFieldUrl ? this.propData.dataFieldUrl : 'jumpUrl'],this.propData.jumpType)
+            if ( item.jumpUrl ) {
+                let url = IDM.getWebPath(item.jumpUrl);
+                window.open(url,this.propData.jumpType)
             }
         },
         makeParamsData(data) {
@@ -107,16 +177,14 @@ export default {
                         ...newParam
                     }
                 },function(res){
-                    console.log('grid组件获取数据++++++++',res)
-                    if ( res && res.length ) {
-                        that.data_list = res;
-                    }
+                    console.log('IPersonalCenter组件获取数据++++++++',res)
+                    that.user_info = res;
                 },function(error){
                     //这里是请求失败的返回结果
                     console.log('error',error)
                 })
             } else {
-                that.data_list = getEntryData()
+                that.user_info = getUserInfoData()
             }
         },
         /**
@@ -148,8 +216,10 @@ export default {
             }
         },
         /** * 把属性转换成样式对象 */
-        convertAttrToStyleObjectTitle() {
+        convertAttrToStyleObjectBottom() {
             var styleObject = {};
+            var styleObjectNumber = {};
+            var styleObjectLabel = {};
             for (const key in this.propData) {
                 if (this.propData.hasOwnProperty.call(this.propData, key)) {
                     const element = this.propData[key];
@@ -157,82 +227,123 @@ export default {
                         continue;
                     }
                     switch (key) {
-                        case "widthTitle":
+                        case "widthBottomContain":
                             styleObject['width'] = element;
                             break;
-                        case "heightTitle":
+                        case "heightBottomContain":
                             styleObject['height'] = element;
                             break;
-                        case "boxTitle":
+                        case "positionTop":
+                            styleObject['top'] = element;
+                            break;
+                        case "bgColorBottomContain":
+                            if (element && element.hex8) {
+                                styleObject["background-color"] = element.hex8;
+                            }
+                            break;
+                        case "boxShadowBottomContain":
+                            styleObject['box-shadow'] = element;
+                            break;
+                        case "boxBottomContain":
                             IDM.style.setBoxStyle(styleObject,element)
+                            break;
+                        case "fontItemNumber":
+                            IDM.style.setFontStyle(styleObjectNumber,element)
+                            this.adaptiveFontSize(styleObjectNumber, element)
+                            break;
+                        case "fontItemLabel":
+                            IDM.style.setFontStyle(styleObjectLabel,element)
+                            this.adaptiveFontSize(styleObjectLabel, element)
+                            break;
+                        case "boxItemNumber":
+                            IDM.style.setBoxStyle(styleObjectNumber,element)
+                            break;
+
+                    }
+                }
+            }
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_bottom', styleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_bottom .list .number', styleObjectNumber);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_bottom .list .name', styleObjectLabel);
+        },
+        convertAttrToStyleObjectTop() {
+            var styleObject = {};
+            var styleObjectBack = {};
+            var styleObjectTitle = {};
+            var styleObjectHeaderImg = {};
+            var styleObjectName = {};
+            var styleObjectIntegral = {};
+            var styleObjectDepartment = {};
+            for (const key in this.propData) {
+                if (this.propData.hasOwnProperty.call(this.propData, key)) {
+                    const element = this.propData[key];
+                    if (!element && element !== false && element != 0) {
+                        continue;
+                    }
+                    switch (key) {
+                        case "widthTopContain":
+                            styleObject['width'] = element;
+                            break;
+                        case "heightTopContain":
+                            styleObject['height'] = element;
+                            break;
+                        case "bgColorTopContain":
+                            if (element && element.hex8) {
+                                styleObject["background-color"] = element.hex8;
+                            }
+                            break;
+                        case "boxTopContain":
+                            IDM.style.setBoxStyle(styleObject,element)
+                            break;
+                        case "iconMarginLeft":
+                            styleObjectBack['left'] = element;
                             break;
                         case "fontTitle":
-                            IDM.style.setFontStyle(styleObject,element)
-                            this.adaptiveFontSize(styleObject, element)
+                            IDM.style.setFontStyle(styleObjectTitle,element)
+                            this.adaptiveFontSize(styleObjectTitle, element)
                             break;
-                        
-                    }
-                }
-            }
-            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IEntryList_app_title', styleObject);
-        },
-        convertAttrToStyleObjectMain() {
-            var styleObject = {};
-            for (const key in this.propData) {
-                if (this.propData.hasOwnProperty.call(this.propData, key)) {
-                    const element = this.propData[key];
-                    if (!element && element !== false && element != 0) {
-                        continue;
-                    }
-                    switch (key) {
-                        case "widthMain":
-                            styleObject['width'] = element;
+                        case "fontTitleIcon":
+                            IDM.style.setFontStyle(styleObjectBack,element)
+                            this.adaptiveFontSize(styleObjectBack, element)
                             break;
-                        case "heightMain":
-                            styleObject['height'] = element;
+                        case "widthHeaderImage":
+                            styleObjectHeaderImg['width'] = this.getAdaptiveSize(element.inputVal,this.propData.adaptationRatio,1) + element.selectVal;
                             break;
-                        case "boxMain":
-                            IDM.style.setBoxStyle(styleObject,element)
+                        case "heightHeaderImage":
+                            styleObjectHeaderImg['height'] = this.getAdaptiveSize(element.inputVal,this.propData.adaptationRatio,1) + element.selectVal;
                             break;
-                    }
-                }
-            }
-            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IEntryList_app_main', styleObject);
-        },
-        convertAttrToStyleObjectItem() {
-            var styleObject = {};
-            if ( this.propData.showUnderLine ) {
-                styleObject['text-decoration'] = 'underline';
-            }
-            for (const key in this.propData) {
-                if (this.propData.hasOwnProperty.call(this.propData, key)) {
-                    const element = this.propData[key];
-                    if (!element && element !== false && element != 0) {
-                        continue;
-                    }
-                    switch (key) {
-                        case "widthItem":
-                            styleObject['width'] = element;
+                        case "boxHeaderImage":
+                            IDM.style.setBoxStyle(styleObjectHeaderImg,element)
                             break;
-                        case "heightItem":
-                            styleObject['height'] = element;
+                        case "fontName":
+                            IDM.style.setFontStyle(styleObjectName,element)
+                            this.adaptiveFontSize(styleObjectName, element)
                             break;
-                        case "boxItem":
-                            IDM.style.setBoxStyle(styleObject,element)
+                        case "fontIntegral":
+                            IDM.style.setFontStyle(styleObjectIntegral,element)
+                            this.adaptiveFontSize(styleObjectIntegral, element)
                             break;
-                        case "fontItem":
-                            IDM.style.setFontStyle(styleObject,element)
-                            this.adaptiveFontSize(styleObject, element)
+                        case "fontDepartment":
+                            IDM.style.setFontStyle(styleObjectDepartment,element)
+                            this.adaptiveFontSize(styleObjectDepartment, element)
+                            break;
+                        case "boxTitleIntegral":
+                            IDM.style.setBoxStyle(styleObjectIntegral,element)
                             break;
                     }
                 }
             }
-            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IEntryList_app_main .list', styleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top', styleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .header .svg-icon', styleObjectBack);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .header span', styleObjectTitle);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info info_left', styleObjectHeaderImg);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .name', styleObjectName);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .title_integral', styleObjectIntegral);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .department', styleObjectDepartment);
         },
         convertAttrToStyleObject() {
-            this.convertAttrToStyleObjectItem()
-            this.convertAttrToStyleObjectTitle()
-            this.convertAttrToStyleObjectMain()
+            this.convertAttrToStyleObjectTop()
+            this.convertAttrToStyleObjectBottom()
             var styleObject = {};
             if (this.propData.bgSize && this.propData.bgSize == "custom") {
                 styleObject["background-size"] = (this.propData.bgSizeWidth ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal : "auto") + " " + (this.propData.bgSizeHeight ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal : "auto")
@@ -317,17 +428,10 @@ export default {
             var _defaultVal = undefined;
             if (dataFiled) {
                 var filedExp = dataFiled;
-                filedExp =
-                    dataName +
-                    (filedExp.startsWiths("[") ? "" : ".") +
-                    filedExp;
+                filedExp = dataName + (filedExp.startsWiths("[") ? "" : ".") + filedExp;
                 var dataObject = { IDM: window.IDM };
                 dataObject[dataName] = resultData;
-                _defaultVal = window.IDM.express.replace.call(
-                    this,
-                    "@[" + filedExp + "]",
-                    dataObject
-                );
+                _defaultVal = window.IDM.express.replace.call( this, "@[" + filedExp + "]", dataObject );
             }
             //对结果进行再次函数自定义
             if (this.propData.customFunction && this.propData.customFunction.length > 0) {
@@ -338,7 +442,8 @@ export default {
                         ...params,
                         ...this.propData.customFunction[0].param,
                         moduleObject: this.moduleObject,
-                        expressData: _defaultVal, interfaceData: resultData
+                        expressData: _defaultVal, 
+                        interfaceData: resultData
                     });
                 } catch (error) {
                 }
@@ -402,9 +507,83 @@ export default {
 </script>
 <style lang="scss" scoped>
 .IPersonalCenter_app{
-    
+    height: 260px;
+    font-family: PingFangSC-Semibold;
+    .IPersonalCenter_app_top{
+        background-image: radial-gradient(51% 50%, #0065FF 0%, #0954C6 100%);
+        .header{
+            padding: 30px 0;
+            position: relative;
+            text-align: center;
+            .svg-icon{
+                position: absolute;
+                left: 15px;
+                font-size: 18px;
+                color: white;
+                font-weight: 500;
+            }
+            span{
+                font-size: 17px;
+                color: #FFFFFF;
+                font-weight: 600;
+            }
+        }
+        .info{
+            padding: 0px 26px 50px 26px;
+            .info_left{
+                width: 70px;
+                height: 70px;
+                flex-shrink: 0;
+                margin-right: 20px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .info_right{
+                width: 100%;
+                color: #FFFFFF;
+                .name{
+                    font-size: 16px;
+                    color: #FFFFFF;
+                    font-weight: 600;
+                }
+                .title_integral,.department{
+                    font-size: 13px;
+                    font-weight: 400;
+                }
+                .title_integral{
+                    margin: 5px 0 5px 0;
+                }
+            }
+        }
+    }
+    .IPersonalCenter_app_bottom{
+        width: auto;
+        height: 75px;
+        margin: 0 10px;
+        position: relative;
+        top: -25px;
+        padding: 0 40px;
+        text-align: center;
+        box-shadow: 0px 2px 9px 7px rgba(238,238,238,0.5);
+        border-radius: 8px;
+        background: #FFFFFF;
+        .list{
+            .number{
+                margin-bottom: 4px;
+                font-family: Arial-Black;
+                font-size: 20px;
+                color: #0954C6;
+                font-weight: 900;
+            }
+            .name{
+                font-size: 13px;
+                color: #333333;
+                font-weight: 400;
+            }
+        }
+    }
 }
 </style>
-<style lang="scss">
 
-</style>

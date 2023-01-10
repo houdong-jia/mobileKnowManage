@@ -43,8 +43,9 @@
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
-                    "text": "显示标题",
-                    "bindKey": "showTitle",
+                    "text": "返回按钮",
+                    "desc":"是否显示返回按钮",
+                    "bindKey": "showBackButton",
                     "default": true,
                     "dictionary": [
                         {
@@ -61,10 +62,10 @@
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
-                    "text": "下划线",
-                    "desc":"是否显示文本下划线",
-                    "bindKey": "showUnderLine",
-                    "default": false,
+                    "text": "导航栏",
+                    "desc":"是否显示导航栏",
+                    "bindKey": "showTitle",
+                    "default": true,
                     "dictionary": [
                         {
                             "label": "是",
@@ -81,25 +82,7 @@
                     "layoutType": "inline",
                     "text": "标题内容",
                     "bindKey": "title",
-                    "default": "标题"
-                },
-                {
-                    "type": "select",
-                    "layoutType": "inline",
-                    "text": "内容布局",
-                    "bindKey": "contentLayout",
-                    "desc": "主内容数字和标题的布局方式",
-                    "dictionary": [
-                        {
-                            "label": "单行单条",
-                            "value": "1"
-                        },
-                        {
-                            "label": "单行多条",
-                            "value": "2"
-                        }
-                    ],
-                    "default": "1"
+                    "default": "个人中心"
                 },
                 {
                     "type": "select",
@@ -122,115 +105,228 @@
             ]
         },
         {
-            "type": "group",
-            "text": "标题样式",
-            "display": "@[showTitle]",
+            "type": "table",
+            "text": "标签配置",
+            "bindKey": "labelList",
+            "tabText": "标签[index]",
+            "openGroup": true,
             "children":[
                 {
                     "type": "input",
                     "layoutType": "inline",
-                    "text": "容器宽",
-                    "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
-                    "bindKey": "widthTitle",
-                    "default": ""
+                    "text": "标签名称",
+                    "bindKey": "name"
                 },
                 {
                     "type": "input",
                     "layoutType": "inline",
-                    "text": "容器高",
-                    "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
-                    "bindKey": "heightTitle",
-                    "default": ""
+                    "text": "字段名称",
+                    "bindKey": "key",
+                    "desc": "接口返回的对象中该标签所对应的字段key"
                 },
                 {
-                    "type": "font",
-                    "layoutType": "block",
-                    "text": "文字",
-                    "bindKey": "fontTitle"
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "跳转地址",
+                    "bindKey": "jumpUrl"
+                }
+            ],
+            "default": [
+                {
+                    "name": "关注的人",
+                    "key": "careNum"
+                },
+                {
+                    "name": "关注的标签",
+                    "key": "careLabelNum"
+                },
+                {
+                    "name": "关注的知识",
+                    "key": "careKnowledgeNum"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "顶部容器样式设置",
+            "desc": "点击？查看样式设置用法指南",
+            "children":[
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "宽度",
+                    "bindKey": "widthTopContain"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "高度",
+                    "bindKey": "heightTopContain"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "背景色",
+                    "bindKey": "bgColorTopContain",
+                    "placeholder": "请选择颜色",
+                    "default": {}
                 },
                 {
                     "type": "box",
                     "layoutType": "block",
                     "text": "内外边距",
-                    "bindKey": "boxTitle"
+                    "bindKey": "boxTopContain"
+                },
+                {
+                    "type": "group",
+                    "text": "导航栏样式设置",
+                    "children":[
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "图标左间距",
+                            "bindKey": "iconMarginLeft"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "标题文字",
+                            "bindKey": "fontTitle"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "返回图标",
+                            "bindKey": "fontTitleIcon"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "头像样式设置",
+                    "children":[
+                        {
+                            "type": "inputNumberUnit",
+                            "layoutType": "inline",
+                            "text": "宽度",
+                            "bindKey": "widthHeaderImage"
+                        },
+                        {
+                            "type": "inputNumberUnit",
+                            "layoutType": "inline",
+                            "text": "高度",
+                            "bindKey": "heightHeaderImage"
+                        },
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "内外边距",
+                            "bindKey": "boxHeaderImage"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "个人信息样式设置",
+                    "children":[
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "姓名",
+                            "bindKey": "fontName"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "称号积分文字",
+                            "bindKey": "fontIntegral"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "部门文字",
+                            "bindKey": "fontDepartment"
+                        },
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "称号积分内外边距",
+                            "bindKey": "boxTitleIntegral"
+                        }
+                    ]
                 }
             ]
         },
         {
             "type": "group",
-            "text": "单项样式",
+            "text": "底部容器样式设置",
+            "desc": "点击？查看样式设置用法指南",
             "children":[
                 {
-                    "type": "inlineGroup",
-                    "text": "宽高",
-                    "children": [
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "宽",
-                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
-                            "bindKey": "widthItem",
-                            "width": "60px",
-                            "default": ""
-                        },
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "高",
-                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
-                            "bindKey": "heightItem",
-                            "width": "60px",
-                            "default": ""
-                        }
-                    ]
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "宽度",
+                    "bindKey": "widthBottomContain"
                 },
                 {
-                    "type": "font",
-                    "layoutType": "block",
-                    "text": "文字",
-                    "bindKey": "fontItem"
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "高度",
+                    "bindKey": "heightBottomContain"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "上间距",
+                    "desc": "容器相对于自身距离上边距的位移",
+                    "bindKey": "positionTop",
+                    "default":"-25px"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "背景色",
+                    "bindKey": "bgColorBottomContain",
+                    "placeholder": "请选择颜色",
+                    "default": {}
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "阴影样式",
+                    "desc":"填写格式如下：10px 10px 5px #888888，更多请点击查看详细填写说明",
+                    "bindKey": "boxShadowBottomContain",
+                    "default":""
                 },
                 {
                     "type": "box",
                     "layoutType": "block",
-                    "text": "容器内外边距",
-                    "bindKey": "boxItem"
-                }
-            ]
-        },
-        {
-            "type": "group",
-            "text": "内容容器样式",
-            "children":[
-                {
-                    "type": "inlineGroup",
-                    "text": "宽高",
-                    "children": [
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "宽",
-                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
-                            "bindKey": "widthMain",
-                            "width": "60px",
-                            "default": ""
-                        },
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "高",
-                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
-                            "bindKey": "heightMain",
-                            "width": "60px",
-                            "default": ""
-                        }
-                    ]
+                    "text": "内外边距",
+                    "bindKey": "boxBottomContain"
                 },
                 {
-                    "type": "box",
-                    "layoutType": "block",
-                    "text": "容器内外边距",
-                    "bindKey": "boxMain"
+                    "type": "group",
+                    "text": "单项样式设置",
+                    "children":[
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "数字文字",
+                            "bindKey": "fontItemNumber"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "标签文字",
+                            "bindKey": "fontItemLabel"
+                        },
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "数字内外边距",
+                            "bindKey": "boxItemNumber"
+                        }
+                    ]
                 }
             ]
         },
@@ -598,7 +694,27 @@
                         {
                             "type": "dataSourceFiledSelect",
                             "layoutType": "inline",
-                            "text": "标题名称",
+                            "text": "头像",
+                            "bindKey": "dataFieldImageUrl",
+                            "default": "imageUrl",
+                            "ctrlAttrObject": {
+                                "dataSourceBindkey": "dataSource"
+                            }
+                        },
+                        {
+                            "type": "dataSourceFiledSelect",
+                            "layoutType": "inline",
+                            "text": "姓名",
+                            "bindKey": "dataFieldName",
+                            "default": "name",
+                            "ctrlAttrObject": {
+                                "dataSourceBindkey": "dataSource"
+                            }
+                        },
+                        {
+                            "type": "dataSourceFiledSelect",
+                            "layoutType": "inline",
+                            "text": "称号",
                             "bindKey": "dataFieldTitle",
                             "default": "title",
                             "ctrlAttrObject": {
@@ -608,10 +724,19 @@
                         {
                             "type": "dataSourceFiledSelect",
                             "layoutType": "inline",
-                            "text": "跳转地址",
-                            "desc": "点击数据时需要跳转的地址字段，没有返回该字段，则不进行跳转",
-                            "bindKey": "dataFieldUrl",
-                            "default": "jumpUrl",
+                            "text": "积分",
+                            "bindKey": "dataFieldIntegral",
+                            "default": "integral",
+                            "ctrlAttrObject": {
+                                "dataSourceBindkey": "dataSource"
+                            }
+                        },
+                        {
+                            "type": "dataSourceFiledSelect",
+                            "layoutType": "inline",
+                            "text": "部门",
+                            "bindKey": "dataFieldDepartment",
+                            "default": "department",
                             "ctrlAttrObject": {
                                 "dataSourceBindkey": "dataSource"
                             }
@@ -654,6 +779,14 @@
                     "bindKey": "paramsMakeFunction",
                     "desc": "用于请求数据源时，对请求参数进行处理，返回处理后的参数",
                     "multiple": false
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "点击返回动作",
+                    "bindKey": "clickFunctionBack",
+                    "desc": "点击的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
+                    "multiple": true
                 }
             ]
         }
