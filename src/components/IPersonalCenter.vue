@@ -270,10 +270,12 @@ export default {
             var styleObject = {};
             var styleObjectBack = {};
             var styleObjectTitle = {};
+            var styleObjectNavigation = {};
             var styleObjectHeaderImg = {};
             var styleObjectName = {};
             var styleObjectIntegral = {};
             var styleObjectDepartment = {};
+            var styleObjectInfo = {};
             for (const key in this.propData) {
                 if (this.propData.hasOwnProperty.call(this.propData, key)) {
                     const element = this.propData[key];
@@ -290,6 +292,7 @@ export default {
                         case "bgColorTopContain":
                             if (element && element.hex8) {
                                 styleObject["background-color"] = element.hex8;
+                                styleObject['background-image'] = 'none'
                             }
                             break;
                         case "boxTopContain":
@@ -305,6 +308,9 @@ export default {
                         case "fontTitleIcon":
                             IDM.style.setFontStyle(styleObjectBack,element)
                             this.adaptiveFontSize(styleObjectBack, element)
+                            break;
+                        case "boxNavigation":
+                            IDM.style.setBoxStyle(styleObjectNavigation,element)
                             break;
                         case "widthHeaderImage":
                             styleObjectHeaderImg['width'] = this.getAdaptiveSize(element.inputVal,this.propData.adaptationRatio,1) + element.selectVal;
@@ -330,16 +336,21 @@ export default {
                         case "boxTitleIntegral":
                             IDM.style.setBoxStyle(styleObjectIntegral,element)
                             break;
+                        case "boxInfo":
+                            IDM.style.setBoxStyle(styleObjectInfo,element)
+                            break;
                     }
                 }
             }
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top', styleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .header', styleObjectNavigation);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .header .svg-icon', styleObjectBack);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .header span', styleObjectTitle);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info info_left', styleObjectHeaderImg);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .name', styleObjectName);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .title_integral', styleObjectIntegral);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info .info_right .department', styleObjectDepartment);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IPersonalCenter_app_top .info', styleObjectInfo);
         },
         convertAttrToStyleObject() {
             this.convertAttrToStyleObjectTop()

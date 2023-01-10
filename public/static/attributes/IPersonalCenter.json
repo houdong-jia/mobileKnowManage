@@ -198,6 +198,12 @@
                             "layoutType": "block",
                             "text": "返回图标",
                             "bindKey": "fontTitleIcon"
+                        },
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "内外边距",
+                            "bindKey": "boxNavigation"
                         }
                     ]
                 },
@@ -209,13 +215,41 @@
                             "type": "inputNumberUnit",
                             "layoutType": "inline",
                             "text": "宽度",
-                            "bindKey": "widthHeaderImage"
+                            "bindKey": "widthHeaderImage",
+                            "dictionary": [
+                                {
+                                    "label": "px",
+                                    "value": "px"
+                                },
+                                {
+                                    "label": "%",
+                                    "value": "%"
+                                },
+                                {
+                                    "label": "em",
+                                    "value": "em"
+                                }
+                            ]
                         },
                         {
                             "type": "inputNumberUnit",
                             "layoutType": "inline",
                             "text": "高度",
-                            "bindKey": "heightHeaderImage"
+                            "bindKey": "heightHeaderImage",
+                            "dictionary": [
+                                {
+                                    "label": "px",
+                                    "value": "px"
+                                },
+                                {
+                                    "label": "%",
+                                    "value": "%"
+                                },
+                                {
+                                    "label": "em",
+                                    "value": "em"
+                                }
+                            ]
                         },
                         {
                             "type": "box",
@@ -252,6 +286,13 @@
                             "layoutType": "block",
                             "text": "称号积分内外边距",
                             "bindKey": "boxTitleIntegral"
+                        },
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "个人信息容器内外边距",
+                            "desc": "个人信息和头像容器的内外边距",
+                            "bindKey": "boxInfo"
                         }
                     ]
                 }
