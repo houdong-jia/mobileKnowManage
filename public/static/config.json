@@ -38,6 +38,13 @@
       "className": "IPersonalCenter",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.popupContainer",
+      "comName": "弹出层容器",
+      "className": "IPopupContainer",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }

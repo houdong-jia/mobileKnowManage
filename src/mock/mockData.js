@@ -56,3 +56,15 @@ export function getUserInfoData() {
         careKnowledgeNum: 8
     }
 }
+export function getTagInfoData() {
+    return [
+        {
+            title: "专题目录1",
+            list: '发文种类,收文种类,公司文化交流'
+        },
+        {
+            title: "专题目录2",
+            list: '知识文档1,知识文档2,知识文档3'
+        }
+    ]
+}

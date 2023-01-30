@@ -1,0 +1,160 @@
+{
+  "classId": "idm.component.mobileKnowManage.popupContainer",
+  "comName": "弹出层容器",
+  "className": "IPopupContainer",
+  "comType": "common",
+  "comLangue": "vue",
+  "compositeAttr": [
+    {
+      "type": "input",
+      "layoutType": "inline",
+      "text": "唯一标识",
+      "bindKey": "ctrlId",
+      "disabled": true,
+      "default": "@[packageid]",
+      "desc": "",
+      "helpUrl": ""
+    },
+    {
+      "type": "group",
+      "text": "基本属性",
+      "desc": "提供设置组件能达到展示效果的基本属性设置信息",
+      "children": [
+        {
+          "type": "select",
+          "layoutType": "inline",
+          "text": "弹出位置",
+          "desc": "弹出位置，可以设置为：top、bottom、left、right",
+          "bindKey": "showPosition",
+          "default": "4",
+          "dictionary": [
+            {
+              "label": "top",
+              "value": "1"
+            },
+            {
+              "label": "bottom",
+              "value": "2"
+            },
+            {
+              "label": "left",
+              "value": "3"
+            },
+            {
+              "label": "right",
+              "value": "4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "text": "弹出层样式",
+      "desc": "点击？查看样式设置用法指南",
+      "helpUrl": "",
+      "children": [
+        {
+          "type": "inlineGroup",
+          "text": "宽高",
+          "children": [
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "宽",
+              "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+              "bindKey": "boxwidth",
+              "width": "60px",
+              "default": "30%"
+            },
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "高",
+              "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+              "bindKey": "boxheight",
+              "width": "60px",
+              "default": "100%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "text": "内层样式",
+      "desc": "点击？查看样式设置用法指南",
+      "helpUrl": "",
+      "children": [
+        {
+          "type": "box",
+          "layoutType": "block",
+          "text": "内外边距",
+          "bindKey": "ulbox",
+          "default": {
+            "marginTopVal": "",
+            "marginRightVal": "",
+            "marginBottomVal": "",
+            "marginLeftVal": "",
+            "paddingTopVal": "20px",
+            "paddingRightVal": "20px",
+            "paddingBottomVal": "20px",
+            "paddingLeftVal": "20px"
+          }
+        },
+        {
+          "type": "font",
+          "layoutType": "block",
+          "text": "页签标题",
+          "desc": "页签标题描述",
+          "bindKey": "tagTitle"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "text": "高级",
+      "desc": "点击？查看高级设置用法指南",
+      "children": [
+        {
+          "type": "actionSelect",
+          "layoutType": "block",
+          "text": "请求参数自定义函数",
+          "desc": "请求参数自定义函数",
+          "bindKey": "customFunc",
+          "multiple": false
+        },
+        {
+          "type": "dataSourceSelect",
+          "layoutType": "inline",
+          "text": "数据源",
+          "desc": "用于选择数据源",
+          "bindKey": "dataSource"
+        },
+        {
+          "type": "group",
+          "text": "字段设置",
+          "desc": "数据源接口参数对应的key",
+          "children":[
+              {
+                  "type": "input",
+                  "layoutType": "inline",
+                  "text": "页签标题",
+                  "bindKey": "tabTitleField",
+                  "desc": "页签标题字段",
+                  "default": "title"
+              },
+              {
+                  "type": "input",
+                  "layoutType": "inline",
+                  "text": "页签",
+                  "bindKey": "tagContentFiled",
+                  "desc": "页签内容字段",
+                  "default": "list"
+              }
+          ]
+        }
+      ]
+    }
+  ]
+}
