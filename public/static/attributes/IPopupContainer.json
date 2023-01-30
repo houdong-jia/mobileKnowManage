@@ -21,6 +21,14 @@
       "desc": "提供设置组件能达到展示效果的基本属性设置信息",
       "children": [
         {
+          "type": "switch",
+          "layoutType": "inline",
+          "text": "默认展开",
+          "desc": "默认展开或者关闭",
+          "bindKey": "isShow",
+          "default": true
+        },
+        {
           "type": "select",
           "layoutType": "inline",
           "text": "弹出位置",
@@ -105,9 +113,68 @@
         {
           "type": "font",
           "layoutType": "block",
-          "text": "页签标题",
-          "desc": "页签标题描述",
+          "text": "标题",
+          "desc": "标题字体",
           "bindKey": "tagTitle"
+        },
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "标题间距",
+          "desc": "标题向下的间距",
+          "bindKey": "titleBottom",
+          "default": "10px"
+        },
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "目录间距",
+          "desc": "目录容器的间距",
+          "bindKey": "catalogBottom",
+          "default": "10px"
+        },
+        {
+          "type": "box",
+          "layoutType": "block",
+          "text": "页签边距",
+          "bindKey": "tagBox",
+          "default": {
+            "marginTopVal": "",
+            "marginRightVal": "",
+            "marginBottomVal": "",
+            "marginLeftVal": "",
+            "paddingTopVal": "5px",
+            "paddingRightVal": "10px",
+            "paddingBottomVal": "5px",
+            "paddingLeftVal": "10px"
+          }
+        },
+        {
+          "type": "border",
+          "layoutType": "block",
+          "text": "页签边框",
+          "bindKey": "tagBorder"
+        },
+        {
+          "type": "font",
+          "layoutType": "block",
+          "text": "页签字体",
+          "desc": "页签字体",
+          "bindKey": "tagFont"
+        },
+        {
+          "type": "border",
+          "layoutType": "block",
+          "text": "选中页签边框",
+          "desc": "选中页签边框",
+          "bindKey": "chooseTagBorder"
+        },
+        {
+          "type": "font",
+          "layoutType": "block",
+          "text": "选中页签字体",
+          "desc": "选中页签字体",
+          "bindKey": "chooseTagFont"
         }
       ]
     },
@@ -130,6 +197,22 @@
           "text": "数据源",
           "desc": "用于选择数据源",
           "bindKey": "dataSource"
+        },
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "发消息key",
+          "desc": "发消息的key",
+          "bindKey": "sendKey",
+          "default": "chooseTag"
+        },
+        {
+          "type": "pageModuleSelect",
+          "layoutType": "block",
+          "text": "tag菜单联动组件发送消息",
+          "desc": "选择点击tag需要联动的组件",
+          "bindKey": "triggerComponents",
+          "multiple": true
         },
         {
           "type": "group",
