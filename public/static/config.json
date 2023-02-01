@@ -45,6 +45,13 @@
       "className": "IPopupContainer",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.hotList",
+      "comName": "热门目录",
+      "className": "IHotList",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }
