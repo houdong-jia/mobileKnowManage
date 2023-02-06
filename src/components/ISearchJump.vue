@@ -81,6 +81,7 @@ export default {
     this.convertAttrToStyleObject();
     this.convertSearchAttrToStyleObject();
     this.convertHotWordsAttrToStyleObject();
+    this.convertThemeListAttrToStyleObject();
     this.propData.showHotWords && this.initData();
   },
   methods: {
@@ -112,6 +113,7 @@ export default {
       this.convertAttrToStyleObject();
       this.convertSearchAttrToStyleObject();
       this.convertHotWordsAttrToStyleObject();
+      this.convertThemeListAttrToStyleObject();
     },
     /**
      * 组件通信：接收消息的方法
@@ -126,6 +128,7 @@ export default {
           this.convertAttrToStyleObject();
           this.convertSearchAttrToStyleObject();
           this.convertHotWordsAttrToStyleObject();
+          this.convertThemeListAttrToStyleObject();
           break;
       }
     },
