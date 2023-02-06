@@ -845,14 +845,14 @@
           "text": "内外边距",
           "bindKey": "itemBox",
           "default": {
-            "marginTopVal": "0px",
+            "marginTopVal": "10px",
             "marginRightVal": "0px",
-            "marginBottomVal": "0px",
+            "marginBottomVal": "10px",
             "marginLeftVal": "0px",
-            "paddingTopVal": "20px",
-            "paddingRightVal": "0px",
-            "paddingBottomVal": "20px",
-            "paddingLeftVal": "0px"
+            "paddingTopVal": "15px",
+            "paddingRightVal": "15px",
+            "paddingBottomVal": "15px",
+            "paddingLeftVal": "15px"
           }
         },
         {
