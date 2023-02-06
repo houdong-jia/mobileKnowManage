@@ -28,7 +28,7 @@
         idm-container-index="1"
       />
     </div>
-    <div class="i-searchJump-hotwords" v-if="propData.showHotWords">
+    <div class="i-searchJump-hotwords" v-if="propData.showHotWords && data && data.length">
       <span class="label" v-if="propData.hotWordsTitle">
         {{propData.hotWordsTitle}}
       </span>
