@@ -59,6 +59,10 @@ export default {
     this.show = this.propData.isShow;
   },
   methods: {
+    propDataWatchHandle (propData) {
+      this.propData = propData.compositeAttr || {};
+      this.init();
+    },
     handleStyle () {
       let styleObject = {},
         catalogObject = {},
@@ -178,7 +182,7 @@ export default {
       }
     },
     init () {
-      console.log(this.propData, '数据');
+      console.log(this.propData, this.moduleObject, '数据');
       this.handleStyle();
       this.initData();
     },
@@ -190,16 +194,16 @@ export default {
 .popup-wrap{
   .tab-ul{
     display: flex;
-    .tag-li{
-      padding: 5px 10px;
-      margin: 0 10px 0 0;
-      border: 1px solid #D6D6D6;
-      border-radius: 50px;
-    }
-    .active{
-      border: 1px solid #f00;
-      color: #f00;
-    }
+    // .tag-li{
+    //   padding: 5px 10px;
+    //   margin: 0 10px 0 0;
+    //   border: 1px solid #D6D6D6;
+    //   border-radius: 50px;
+    // }
+    // .active{
+    //   border: 1px solid #f00;
+    //   color: #f00;
+    // }
   }
 }
 </style>

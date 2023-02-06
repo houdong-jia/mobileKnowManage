@@ -34,23 +34,23 @@
           "text": "弹出位置",
           "desc": "弹出位置，可以设置为：top、bottom、left、right",
           "bindKey": "showPosition",
-          "default": "4",
+          "default": "right",
           "dictionary": [
             {
               "label": "top",
-              "value": "1"
+              "value": "top"
             },
             {
               "label": "bottom",
-              "value": "2"
+              "value": "bottom"
             },
             {
               "label": "left",
-              "value": "3"
+              "value": "left"
             },
             {
               "label": "right",
-              "value": "4"
+              "value": "right"
             }
           ]
         }
@@ -73,7 +73,7 @@
               "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
               "bindKey": "boxwidth",
               "width": "60px",
-              "default": "30%"
+              "default": "80%"
             },
             {
               "type": "input",
@@ -131,7 +131,7 @@
           "text": "目录间距",
           "desc": "目录容器的间距",
           "bindKey": "catalogBottom",
-          "default": "10px"
+          "default": "20px"
         },
         {
           "type": "box",
