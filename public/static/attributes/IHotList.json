@@ -230,17 +230,7 @@
               "type": "box",
               "layoutType": "block",
               "text": "内外边距",
-              "bindKey": "box",
-              "default": {
-                "marginTopVal": "5px",
-                "marginRightVal": "5px",
-                "marginBottomVal": "5px",
-                "marginLeftVal": "5px",
-                "paddingTopVal": "5px",
-                "paddingRightVal": "5px",
-                "paddingBottomVal": "5px",
-                "paddingLeftVal": "5px"
-              }
+              "bindKey": "box"
             },
             {
               "type": "border",
