@@ -29,6 +29,24 @@
           "default": true
         },
         {
+          "type": "radio",
+          "layoutType": "inline",
+          "text": "加载模式",
+          "desc": "加载容器：可以拖动别的组件拖入，加载目录会默认加载目录",
+          "bindKey": "loadType",
+          "dictionary": [
+              {
+                  "label": "加载目录",
+                  "value": "loadcatalog"
+              },
+              {
+                  "label": "加载容器",
+                  "value": "loadcontainer"
+              }
+          ],
+          "default": "loadcontainer"
+        },
+        {
           "type": "select",
           "layoutType": "inline",
           "text": "弹出位置",
@@ -201,10 +219,18 @@
         {
           "type": "input",
           "layoutType": "inline",
-          "text": "发消息key",
-          "desc": "发消息的key",
+          "text": "接收消息key",
+          "desc": "接收消息key",
           "bindKey": "sendKey",
           "default": "chooseTag"
+        },
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "发消息key",
+          "desc": "发消息的key",
+          "bindKey": "receiveKey",
+          "default": "recivekey"
         },
         {
           "type": "pageModuleSelect",

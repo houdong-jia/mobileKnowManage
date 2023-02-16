@@ -13,17 +13,26 @@
       <van-popup v-model="show"
       :position="propData.showPosition"
       :style="{ width: propData.boxwidth, height: propData.boxheight }">
-        <div class="popup-tab" v-for="(item, index) in list" :key="index">
-          <div class="tag-title">{{item[propData.tabTitleField]}}</div>
-          <div class="tab-ul">
-            <div class="tag-li" :class="chooseVal==subitem && 'active'"
-              v-for="(subitem, subindex) in item[propData.tagContentFiled].split(',')"
-              :key="subindex"
-              @click="handleClick(subitem)">
-              {{subitem}}
+        <template v-if="propData.loadType == 'loadcatalog'">
+          <div class="popup-tab" v-for="(item, index) in list" :key="index" >
+            <div class="tag-title">{{item[propData.tabTitleField]}}</div>
+            <div class="tab-ul">
+              <div class="tag-li" :class="chooseVal==subitem && 'active'"
+                v-for="(subitem, subindex) in item[propData.tagContentFiled].split(',')"
+                :key="subindex"
+                @click="handleClick(subitem)">
+                {{subitem}}
+              </div>
             </div>
           </div>
-        </div>
+        </template>
+        <template v-if="propData.loadType == 'loadcontainer'">
+          <div class="tab-conent drag_container"
+            idm-ctrl-inner
+            :idm-ctrl-id="moduleObject.id"
+            :idm-container-index="1"
+          ></div>
+        </template>
       </van-popup>
     </div>
   </div>
@@ -44,7 +53,8 @@ export default {
         tagContentFiled: 'list',
         titleBottom: '10px',
         catalogBottom: '20px',
-        isShow: true
+        isShow: true,
+        loadType: 'adaptive'
       },
       list: [],
       show: false,
@@ -124,10 +134,12 @@ export default {
      */
     receiveBroadcastMessage(object) {
       switch (object.type) {
-        case 'linkageDemand':
+        case this.propData.receiveKey:
           console.log('IPopupContainer接收消息格式', object.message);
           this.show = true;
-          this.chooseVal = object.message;
+          if (this.propData.loadType == 'loadcatalog') {
+            this.chooseVal = object.message;
+          }
           break;
       }
     },
@@ -184,7 +196,10 @@ export default {
     init () {
       console.log(this.propData, this.moduleObject, '数据');
       this.handleStyle();
-      this.initData();
+      if (this.propData.loadType == 'loadcatalog') {
+        this.initData();
+      }
+      this.show = this.propData.isShow;
     },
   }
 }
@@ -192,6 +207,9 @@ export default {
 
 <style lang="scss" scoped>
 .popup-wrap{
+  .tab-conent{
+    min-height: 200px;
+  }
   .tab-ul{
     display: flex;
     // .tag-li{
