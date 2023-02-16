@@ -267,10 +267,10 @@ export default {
       this.data = [];
     },
     onLoad(arr) {
-      if (!this.propData.dataSource || !this.propData.dataSource[0]?.id) {
+      if (this.propData.dataType != 'dataSource' || !this.propData.dataSource || !this.propData.dataSource[0]?.id) {
+        // this.finished = false;
+        this.loading = false;
         if (this.moduleObject.env !== 'production') {
-          this.finished = false;
-          this.loading = false;
           this.data = [...this.data, ...devResult(this.propData.pageNum)];
         }
         return;
@@ -325,6 +325,12 @@ export default {
         case 'pageResize':
           this.currentEquipWidth = messageObject.message?.width;
           this.convertAttrToStyleObject();
+          break;
+        case 'linkageResult':
+          if (messageObject.message && this.propData.dataType == 'linkageResult') {
+            let data = this.propData.dataFiled ? this.getExpressData('data', this.propData.dataFiled, messageObject.message) : messageObject.message;
+            this.data = this.customFormat(this.propData.dataCustomFunction, data) || [];
+          }
           break;
       }
     },

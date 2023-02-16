@@ -43,12 +43,39 @@
           "default": "没有更多了"
         },
         {
+          "type": "select",
+          "layoutType": "inline",
+          "text": "数据来源",
+          "desc": "用于设置数据来源",
+          "bindKey": "dataType",
+          "dictionary": [
+            {
+              "label": "数据源",
+              "value": "dataSource"
+            },
+            {
+              "label": "从消息获取",
+              "value": "linkageResult"
+            }
+          ],
+          "default": "dataSource"
+        },
+        {
+          "type": "dataSourceSelect",
+          "layoutType": "inline",
+          "text": "数据源",
+          "desc": "用于选择数据源",
+          "bindKey": "dataSource",
+          "display": "@[dataType=='dataSource']"
+        },
+        {
           "type": "inputNumber",
           "layoutType": "inline",
           "text": "最大行数",
           "desc": "每项内容的文字超出所设行数后将不再显示，并在最后一行末尾显示省略号",
           "bindKey": "lineClamp",
-          "default": 3
+          "default": 3,
+          "display": "@[dataType=='dataSource']"
         },
         {
           "type": "inputNumber",
@@ -56,14 +83,27 @@
           "text": "每页数量",
           "desc": "每页中有多少item",
           "bindKey": "pageNum",
-          "default": 10
+          "default": 10,
+          "display": "@[dataType=='dataSource']"
         },
         {
-          "type": "dataSourceSelect",
+          "type": "input",
           "layoutType": "inline",
-          "text": "数据源",
-          "desc": "用于选择数据源",
-          "bindKey": "dataSource"
+          "text": "数据取值",
+          "desc": "根据其他组件传输的数据格式指定结果集的字段，比如传输的数据格式为{data:{rows:[{}]}}，则这里应该填写data.rows",
+          "bindKey": "dataFiled",
+          "display": "@[dataType=='linkageResult']",
+          "placeholder": "示例：data 或者 data.rows",
+          "default": ""
+        },
+        {
+          "type": "actionSelect",
+          "layoutType": "block",
+          "text": "数据格式化函数",
+          "bindKey": "dataCustomFunction",
+          "display": "@[dataType=='linkageResult']",
+          "desc": "用于对上面取到的数据数据进行格式化处理，请返回格式化后的新数据，参数为{commonParam: 组件信息, customParam: 用户自定义参数, data: 请求结果}",
+          "multiple": false
         },
         {
           "type": "group",
