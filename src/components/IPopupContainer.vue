@@ -9,8 +9,8 @@
   :id="moduleObject.id"
   :idm-ctrl-id="moduleObject.id"
   >
-    <div class="popup-wrap">
-      <van-popup v-model="show"
+    <div class="popup-wrap" v-show="show">
+      <van-popup v-model="showCopy"
       :position="propData.showPosition"
       :style="{ width: propData.boxwidth, height: propData.boxheight }">
         <template v-if="propData.loadType == 'loadcatalog'">
@@ -58,6 +58,7 @@ export default {
       },
       list: [],
       show: false,
+      showCopy: true,
       chooseVal: ''
     }
   },
@@ -133,10 +134,12 @@ export default {
      * } object
      */
     receiveBroadcastMessage(object) {
+      console.log(object, '测试消息');
       switch (object.type) {
-        case this.propData.receiveKey:
+        case this.propData.sendKey:
           console.log('IPopupContainer接收消息格式', object.message);
           this.show = true;
+          this.showCopy = true;
           if (this.propData.loadType == 'loadcatalog') {
             this.chooseVal = object.message;
           }
@@ -147,7 +150,7 @@ export default {
       this.chooseVal = val;
       // 发送消息给组件
       this.sendBroadcastMessage({
-        type: this.propData.sendKey,
+        type: this.propData.receiveKey,
         rangeModule: this.propData.triggerComponents && this.propData.triggerComponents.map(el => el.moduleId),
         message: val
       })
@@ -200,6 +203,7 @@ export default {
         this.initData();
       }
       this.show = this.propData.isShow;
+      this.showCopy = true;
     },
   }
 }
