@@ -138,8 +138,8 @@ export default {
       switch (object.type) {
         case this.propData.sendKey:
           console.log('IPopupContainer接收消息格式', object.message);
-          this.show = true;
-          this.showCopy = true;
+          this.show = object.message;
+          this.showCopy = object.message;
           if (this.propData.loadType == 'loadcatalog') {
             this.chooseVal = object.message;
           }
