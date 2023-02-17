@@ -5,13 +5,6 @@
   "className": "mobileKnowManage",
   "module": [
     {
-      "classId": "idm.component.mobileKnowManage.text",
-      "comName": "文本",
-      "className": "IText",
-      "comType": "common",
-      "comLangue": "vue"
-    },
-    {
       "classId": "idm.component.mobileKnowManage.entrylist",
       "comName": "词条列表",
       "className": "IEntryList",
@@ -57,6 +50,13 @@
       "classId": "idm.component.mobileKnowManage.docList",
       "comName": "文档列表",
       "className": "IDocList",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.bottomButtons",
+      "comName": "底部按钮组",
+      "className": "IBottomButtons",
       "comType": "common",
       "comLangue": "vue"
     }
