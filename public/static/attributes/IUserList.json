@@ -91,6 +91,42 @@
         },
         {
             "type": "table",
+            "text": "额外元素配置",
+            "bindKey": "extraList",
+            "tabText": "按钮[index]",
+            "openGroup": true,
+            "children":[
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "宽度",
+                    "bindKey": "width",
+                    "default": "50%"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "取值字段",
+                    "bindKey": "dataField",
+                    "desc":"例如：发布时间:@[publishTime]",
+                    "placeholder":"例如：发布时间:@[publishTime]"
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "文字",
+                    "bindKey": "font"
+                },
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "box"
+                }
+            ]
+        },
+        {
+            "type": "table",
             "text": "操作按钮配置",
             "bindKey": "buttonList",
             "tabText": "按钮[index]",
@@ -129,6 +165,14 @@
                     "text": "点击时动作",
                     "bindKey": "clickFunction",
                     "desc": "点击的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
+                    "multiple": true
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "显示条件",
+                    "bindKey": "showHiddenFunction",
+                    "desc": "按钮是否显示的自定义函数,显示返回true，不显示返回false",
                     "multiple": true
                 }
             ]

@@ -10,10 +10,15 @@
                         </div>
                         <div v-if="propData.contentLayout == '2'" class="line"></div>
                     </div>
-                    <div class="name">{{ item[propData.dataFieldName ? propData.dataFieldName : 'name'] }}</div>
+                    <div class="list_left_main">
+                        <div class="name">{{ item[propData.dataFieldName ? propData.dataFieldName : 'name'] }}</div>
+                        <div class="extra flex_start">
+                            <div v-for="(item1,index1) in propData.extraList" class="extra_list" :key="index1" :style="getExtraStyle(item1)">{{ getExtraText(item1,item) }}</div>
+                        </div>
+                    </div>
                 </div>
                 <div v-if="propData.buttonList && propData.buttonList.length" class="list_right flex_end">
-                    <div @click="clickButton(item)" v-for="(item,index) in propData.buttonList" :style="getButtonStyle(item)" :key="index" class="button_list">{{ item.text }}</div>
+                    <div @click="clickButton(item)" v-for="(item,index) in getButtonList" :style="getButtonStyle(item)" :key="index" class="button_list">{{ item.text }}</div>
                 </div>
             </div>
         </div>
@@ -31,10 +36,29 @@ export default {
         return {
             moduleObject: {},
             propData: this.$root.propData.compositeAttr || {
-                loadDataCreated: true,
-                showTitle: true,
-                title: "标题",
-                contentLayout: 2,
+                // loadDataCreated: true,
+                // showTitle: true,
+                // title: "标题",
+                // contentLayout: 2,
+                // buttonList: [
+                //     {
+                //         text: '取消关注'
+                //     }
+                // ],
+                // extraList: [
+                //     {
+                //         width: '50%',
+                //         dataField: '类型：@[type]'
+                //     },
+                //     {
+                //         width: '50%',
+                //         dataField: '作者：@[author]'
+                //     },
+                //     {
+                //         width: '50%',
+                //         dataField: '发布时间：@[publishTime]'
+                //     }
+                // ]
             },
             data_list: [],
             demand_params: {},
@@ -45,6 +69,33 @@ export default {
     },
     watch: {
         
+    },
+    computed: {
+        getButtonList() {
+            var params = this.commonParam();
+
+            let map = this.propData.buttonList.filter((item) => {
+                if ( item.showHiddenFunction && item.showHiddenFunction[0] && item.showHiddenFunction[0].name && window[this.propData.showHiddenFunction[0].name] ) {
+                    try {
+                        let resValue = window[this.propData.showHiddenFunction[0].name].call(this,{
+                            ...params,
+                            ...this.propData.showHiddenFunction[0].param,
+                            moduleObject:this.moduleObject,
+                            _this: this,
+                            item: item
+                        });
+                        if ( resValue ) {
+                            return item
+                        }
+                    } catch (error) {
+                        return item
+                    }
+                } else {
+                    return item
+                }
+            })
+            return map
+        }
     },
     created() {
         this.moduleObject = this.$root.moduleObject;
@@ -60,6 +111,27 @@ export default {
     },
     destroyed() { },
     methods: {
+        getExtraStyle(item) {
+            var styleObject = {};
+            if ( item.width ) {
+                styleObject["width"] = item.width;
+            }
+            if ( item.font ) {
+                IDM.style.setFontStyle(styleObject,item.font)
+                this.adaptiveFontSize(styleObject, item.font)
+            }
+            if ( item.box ) {
+                IDM.style.setBoxStyle(styleObject,item.box)
+            }
+            return styleObject
+        },
+        getExtraText(item,data) {
+            if ( item && item.dataField ) {
+                return IDM.express.replace(item.dataField,data)
+            } else {
+                return ''
+            }
+        },
         getButtonStyle(item) {
             var styleObject = {};
             if ( item.bgColor && item.bgColor.hex8 ) {
@@ -518,6 +590,7 @@ export default {
                 border-bottom: none;
             }
             .list_left{
+                width: 100%;
                 .img{
                     width: 45px;
                     height: 45px;
@@ -533,11 +606,27 @@ export default {
                     margin-right: 7px;
                     background: #0954C6;
                 }
-                .name{
-                    font-family: PingFangSC-Medium;
-                    font-size: 15px;
-                    color: #333333;
-                    font-weight: 500;
+                .list_left_main{
+                    width: 100%;
+                    .name{
+                        font-family: PingFangSC-Medium;
+                        font-size: 15px;
+                        color: #333333;
+                        font-weight: 500;
+                    }
+                    .extra{
+                        flex-wrap: wrap;
+                    }
+                    .extra_list{
+                        margin-top: 5px;
+                        flex-wrap: wrap;
+                        flex-shrink: 0;
+                        white-space: nowrap;
+                        font-family: PingFangSC-Regular;
+                        font-size: 12px;
+                        color: #666666;
+                        font-weight: 400;
+                    }
                 }
             }
             .list_right{
@@ -546,6 +635,7 @@ export default {
                     border-radius: 4px;
                     color: white;
                     font-size: 15px;
+                    white-space: nowrap;
                     background: #0954C6;
                 }
             }

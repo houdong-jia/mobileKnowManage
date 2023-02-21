@@ -26,21 +26,39 @@ export function getUserListData() {
     return [
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         },
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         },
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         },
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         },
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         },
         {
             name: '关联知识xxx',
+            type: 'xxx',
+            author: 'XXX',
+            publishTime: '2022-01-01 19:30'
         }
     ]
 }
