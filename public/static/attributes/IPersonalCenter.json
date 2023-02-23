@@ -125,10 +125,12 @@
                     "desc": "接口返回的对象中该标签所对应的字段key"
                 },
                 {
-                    "type": "input",
-                    "layoutType": "inline",
-                    "text": "跳转地址",
-                    "bindKey": "jumpUrl"
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "点击动作",
+                    "bindKey": "clickFunction",
+                    "desc": "点击的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
+                    "multiple": true
                 }
             ],
             "default": [
