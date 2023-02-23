@@ -9,12 +9,12 @@
         :style="{width: extra.extraWidth + '%', justifyContent: extra.position, cursor: extra.clickType != 'none' ? 'pointer' : ''}"
         @click.stop="onExtraClick(extra,item,index)"
       >
-        <div class="img" v-if="extra.leftAreaType == 'img' && extra.imageField">
+        <div class="img" v-if="extra.leftAreaType == 'img' && (extra.imageField || extra.image)">
           <img
             width="100%"
             height="100%"
             :src="
-              IDM.url.getWebPath(getExpressData('data', extra.imageField, item))
+              IDM.url.getWebPath(extra.imageField ? getExpressData('data', extra.imageField, item) : extra.image)
             "
           />
         </div>

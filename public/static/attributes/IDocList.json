@@ -288,10 +288,18 @@
           "display": "@[leftAreaType=='icon']"
         },
         {
+          "type": "uploadImage",
+          "layoutType": "inline",
+          "text": "左侧图片",
+          "desc": "当图片字段没有值时，此处可作为默认图片",
+          "bindKey": "image",
+          "display": "@[leftAreaType=='img']"
+        },
+        {
           "type": "input",
           "layoutType": "inline",
           "text": "图片字段",
-          "desc": "在数据中每项对象中的图片取值字段",
+          "desc": "在数据中每项对象中的图片取值字段，会覆盖掉上面选择的图片",
           "default": "image",
           "bindKey": "imageField",
           "display": "@[leftAreaType=='img']"
