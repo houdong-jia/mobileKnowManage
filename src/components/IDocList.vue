@@ -48,9 +48,9 @@
               {{propData.titleTagName}}
             </div>
           </div>
-          <DocListExtra :extraList="middleExtraList" :item="item" :getExpressData="getExpressData" :onExtraClick="onExtraClick" />
+          <DocListExtra :extraList="middleExtraList" :item="item" :index="index" :getExpressData="getExpressData" :onExtraClick="onExtraClick" />
           <div class="item-content" v-if="propData.contentFiled" v-html="getExpressData('data', propData.contentFiled, item)" :style="{'-webkit-line-clamp': propData.lineClamp}" />
-          <DocListExtra :extraList="bottomExtraList" :item="item" :getExpressData="getExpressData" :onExtraClick="onExtraClick" />
+          <DocListExtra :extraList="bottomExtraList" :item="item" :index="index" :getExpressData="getExpressData" :onExtraClick="onExtraClick" />
           <div class="item-float" :style="{top: propData.floatTop + 'px', bottom: propData.floatBottom + 'px', right: propData.floatRight + 'px', left: propData.floatLeft + 'px'}" v-if="propData.floatItemType != 'none'">
             <van-button v-if="propData.floatItemType == 'button'" :color="propData.buttonColor && propData.buttonColor.hex8 ? IDM.hex8ToRgbaString(propData.buttonColor.hex8) : ''" size="small" @click.stop="onButtonClick(item, index)">{{propData.buttonName}}</van-button>
             <div v-if="propData.floatItemType == 'img' && propData.floatImageField" class="img" >
@@ -251,6 +251,8 @@ export default {
           data: this.data,
           _this: this
         });
+      } else {
+        this.onItemClick(item, index);
       }
     },
     reloadCurrentPage(index) {
