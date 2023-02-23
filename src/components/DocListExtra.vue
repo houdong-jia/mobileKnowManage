@@ -39,7 +39,7 @@ export default {
     return {
     }
   },
-  props: ['extraList', 'item', 'getExpressData', 'onExtraClick']
+  props: ['extraList', 'item', 'index', 'getExpressData', 'onExtraClick']
 }
 </script>
 <style lang="scss">
