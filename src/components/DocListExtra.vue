@@ -14,7 +14,7 @@
             width="100%"
             height="100%"
             :src="
-              IDM.url.getWebPath(extra.imageField ? getExpressData('data', extra.imageField, item) : extra.image)
+              IDM.url.getWebPath(extra.imageField ? getExpressData('data', extra.imageField, item) || extra.image : extra.image)
             "
           />
         </div>
