@@ -73,6 +73,13 @@
       "className": "IFloatButton",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.knowmanage.knowledgeSubjectList",
+      "comName": "知识专题列表",
+      "className": "IknowledgeSubjectList",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }
