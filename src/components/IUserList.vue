@@ -1,26 +1,33 @@
 <template>
     <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="IUserList_app">
         <div v-if="propData.showTitle" class="IUserList_app_title">{{ propData.title }}</div>
-        <div class="IUserList_app_main">
-            <div @click="clickGrid(item)" v-for="(item,index) in data_list" :key="index" class="list flex_between">
-                <div class="list_left flex_start">
-                    <div v-if="propData.contentLayout == '1' || propData.contentLayout == '2'" class="list_left_icon">
-                        <div v-if="propData.contentLayout == '1'" class="img">
-                            <img :src="getImageSrc(item)" alt="">
+        <div class="IUserList_app_main scrollbar_style">
+            <van-list v-if="data_list && data_list.length" :offset="propData.offset" :immediate-check="false" v-model="loading" :finished="finished" :loading-text="propData.loadingText" :finished-text="propData.finishedText" @load="onLoad" >
+                <div v-for="(item,index) in data_list" :key="index" class="list flex_between">
+                    <div class="list_left flex_start">
+                        <div v-if="propData.contentLayout == '1' || propData.contentLayout == '2'" class="list_left_icon">
+                            <div v-if="propData.contentLayout == '1'" class="img">
+                                <img :src="getImageSrc(item)" alt="">
+                            </div>
+                            <div v-if="propData.contentLayout == '2'" class="line"></div>
                         </div>
-                        <div v-if="propData.contentLayout == '2'" class="line"></div>
+                        <div class="list_left_main">
+                            <div class="name">{{ item[propData.dataFieldName ? propData.dataFieldName : 'name'] }}</div>
+                            <div class="extra flex_start">
+                                <div v-for="(item1,index1) in propData.extraList" class="extra_list" :key="index1" :style="getExtraStyle(item1)">{{ getExtraText(item1,item) }}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="list_left_main">
-                        <div class="name">{{ item[propData.dataFieldName ? propData.dataFieldName : 'name'] }}</div>
-                        <div class="extra flex_start">
-                            <div v-for="(item1,index1) in propData.extraList" class="extra_list" :key="index1" :style="getExtraStyle(item1)">{{ getExtraText(item1,item) }}</div>
-                        </div>
+                    <div v-if="propData.buttonList && propData.buttonList.length" class="list_right flex_end">
+                        <div @click="clickButton(item)" v-for="(item,index) in getButtonList" :style="getButtonStyle(item)" :key="index" class="button_list">{{ item.text }}</div>
                     </div>
                 </div>
-                <div v-if="propData.buttonList && propData.buttonList.length" class="list_right flex_end">
-                    <div @click="clickButton(item)" v-for="(item,index) in getButtonList" :style="getButtonStyle(item)" :key="index" class="button_list">{{ item.text }}</div>
-                </div>
+            </van-list>
+            <div v-else class="empty_block flex_column_center">
+                <SvgIcon icon-class="empty"></SvgIcon>
+                <div class="text">暂无数据</div>
             </div>
+            
         </div>
     </div>
 </template>
@@ -28,39 +35,46 @@
 <script>
 import { getUserListData } from '../mock/mockData'
 import adaptationScreenMixin from '../mixins/adaptationScreen'
+import SvgIcon from '../icons/SvgIcon.vue';
 
 export default {
     name: 'IUserList',
     mixins: [adaptationScreenMixin],
+    components: {
+        SvgIcon
+    },
     data() {
         return {
             moduleObject: {},
             propData: this.$root.propData.compositeAttr || {
-                // loadDataCreated: true,
-                // showTitle: true,
-                // title: "标题",
-                // contentLayout: 2,
-                // buttonList: [
-                //     {
-                //         text: '取消关注'
-                //     }
-                // ],
-                // extraList: [
-                //     {
-                //         width: '50%',
-                //         dataField: '类型：@[type]'
-                //     },
-                //     {
-                //         width: '50%',
-                //         dataField: '作者：@[author]'
-                //     },
-                //     {
-                //         width: '50%',
-                //         dataField: '发布时间：@[publishTime]'
-                //     }
-                // ]
+                loadDataCreated: true,
+                showTitle: true,
+                title: "标题",
+                contentLayout: 2,
+                buttonList: [
+                    {
+                        text: '取消关注'
+                    }
+                ],
+                extraList: [
+                    {
+                        width: '50%',
+                        dataField: '类型：@[type]'
+                    },
+                    {
+                        width: '50%',
+                        dataField: '作者：@[author]'
+                    },
+                    {
+                        width: '50%',
+                        dataField: '发布时间：@[publishTime]'
+                    }
+                ]
             },
             data_list: [],
+            page: 1,
+            loading: false,
+            finished: false,
             demand_params: {},
             conditionObject: {},
         }
@@ -101,7 +115,7 @@ export default {
         this.moduleObject = this.$root.moduleObject;
         this.convertAttrToStyleObject();
         if ( this.propData.loadDataCreated ) {
-            this.initData()
+            this.initData(1)
         }
     },
     mounted() {
@@ -111,6 +125,15 @@ export default {
     },
     destroyed() { },
     methods: {
+        onLoad() {
+            console.log('触发加载-size',this.page);
+            this.page = this.page + 1;
+            if ( this.page == 1 ) {
+                this.loading = false;
+                return
+            }
+            this.initData()
+        },
         getExtraStyle(item) {
             var styleObject = {};
             if ( item.width ) {
@@ -183,7 +206,13 @@ export default {
             }
             return data
         },
-        initData() {
+        initData(is_init) {
+            if ( is_init ) {
+                this.page = 1;
+                this.data_list = [];
+            }
+            this.finished = false;
+            let that = this;
             var params = this.commonParam();
             //接收其他组件联动参数
             if ( this.propData.linkageParamList && this.propData.linkageParamList.length > 0 ) {
@@ -217,8 +246,11 @@ export default {
                 });
             }
             params = this.makeParamsData(params)
-            let newParam = { ...params };
-            let that = this;
+            let newParam = { 
+                ...params,
+                [that.propData.sizeKey]: that.propData.size,
+                [that.propData.pageKey]: that.page,
+            };
             console.log('newParam',newParam)
             if ( this.propData.dataSource && this.propData.dataSource.length ) {
                 IDM.datasource.request(this.propData.dataSource[0].id,{
@@ -227,9 +259,14 @@ export default {
                         ...newParam
                     }
                 },function(res){
-                    console.log('grid组件获取数据++++++++',res)
-                    if ( res && res.length ) {
+                    if ( that.page == 1 ) {
                         that.data_list = res;
+                    } else {
+                        that.data_list.push(...res);
+                    }
+                    that.loading = false;
+                    if ( res && res.length < that.propData.size ) {
+                        that.finished = true;
                     }
                 },function(error){
                     //这里是请求失败的返回结果
@@ -237,6 +274,8 @@ export default {
                 })
             } else {
                 that.data_list = getUserListData()
+                that.loading = false;
+                that.finished = true;
             }
         },
         /**
@@ -245,7 +284,7 @@ export default {
         propDataWatchHandle(propData) {
             this.propData = propData.compositeAttr || {};
             this.convertAttrToStyleObject();
-            this.initData()
+            this.initData(1)
         },
         convertThemeListAttrToStyleObject() {
             const themeList = this.propData.themeList;
@@ -397,10 +436,48 @@ export default {
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .list .img', styleObjectImg);
             window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .list .line', styleObjectLine);
         },
+        convertAttrToStyleObjectEmpty() {
+            var styleObjectFinished = {};
+            var styleObjectLoading = {};
+            var styleObjectEmptyText = {};
+            var styleObjectEmptyIcon = {};
+            for (const key in this.propData) {
+                if (this.propData.hasOwnProperty.call(this.propData, key)) {
+                    const element = this.propData[key];
+                    if (!element && element !== false && element != 0) {
+                        continue;
+                    }
+                    switch (key) {
+                        case "fontFinished":
+                            IDM.style.setFontStyle(styleObjectFinished,element)
+                            break;
+                        case "fontLoading":
+                            IDM.style.setFontStyle(styleObjectLoading,element)
+                            break;
+                        case "fontEmptyText":
+                            IDM.style.setFontStyle(styleObjectEmptyText,element)
+                            break;
+                        case "fontEmptyIcon":
+                            IDM.style.setFontStyle(styleObjectEmptyIcon,element)
+                            break;
+                        case "boxEmptyIcon":
+                            IDM.style.setBoxStyle(styleObjectEmptyIcon,element)
+                            break;
+                    }
+                }
+            }
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .van-list__finished-text', styleObjectFinished);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .van-loading__spinner', styleObjectLoading);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .van-loading__text', styleObjectLoading);
+
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .empty_block .svg-icon', styleObjectEmptyIcon);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .IUserList_app_main .empty_block .text', styleObjectEmptyText);
+        },
         convertAttrToStyleObject() {
             this.convertAttrToStyleObjectItem()
             this.convertAttrToStyleObjectTitle()
             this.convertAttrToStyleObjectMain()
+            this.convertAttrToStyleObjectEmpty()
             var styleObject = {};
             if (this.propData.bgSize && this.propData.bgSize == "custom") {
                 styleObject["background-size"] = (this.propData.bgSizeWidth ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal : "auto") + " " + (this.propData.bgSizeHeight ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal : "auto")
@@ -574,6 +651,7 @@ export default {
 <style lang="scss" scoped>
 .IUserList_app{
     padding: 10px 15px;
+    overflow: auto;
     .IUserList_app_title{
         margin-bottom: 10px;
         font-size: 17px;
@@ -640,9 +718,37 @@ export default {
                 }
             }
         }
+        .empty_block{
+            height: 100%;
+            text-align: center;
+            .svg-icon{
+                margin-bottom: 10px;
+                font-size: 90px;
+                color: #666666ff;
+            }
+            .text{
+                font-size: 14px;
+                color: #666666ff;
+            }
+        }
     }
 }
 </style>
 <style lang="scss">
-
+.scrollbar_style::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.scrollbar_style::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+.scrollbar_style::-webkit-scrollbar-thumb {
+    min-height: 18px;
+    border-radius: 4px;
+}
+.IUserList_app{
+    .van-list{
+        height: 100%;
+    }
+}
 </style>
