@@ -115,10 +115,23 @@ export default {
             }
         },
         clickGrid(item) {
-            if ( item.jumpUrl ) {
-                let url = IDM.getWebPath(item.jumpUrl);
-                window.open(url,this.propData.jumpType)
+            let that = this;
+            if(this.moduleObject.env=="develop"){
+                return;
             }
+            let urlObject = window.IDM.url.queryObject(),
+            pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+            
+            var clickFunction = item.clickFunction;
+            clickFunction&&clickFunction.forEach(e=>{
+                window[e.name]&&window[e.name].call(this,{
+                    urlData:urlObject,
+                    pageId,
+                    customParam:e.param,
+                    _this:this,
+                    item: item
+                });
+            })
         },
         makeParamsData(data) {
             let result = {};

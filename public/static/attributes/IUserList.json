@@ -58,12 +58,44 @@
                     ]
                 },
                 {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "分页条数",
+                    "bindKey": "size",
+                    "desc": "列表分页单次请求获取的数据量",
+                    "default": 10
+                },
+                {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "加载间距",
+                    "bindKey": "offset",
+                    "desc": "滚动条与底部距离小于加载间距时触发加载事件",
+                    "default": 50
+                },
+                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "标题内容",
                     "bindKey": "title",
                     "default": "标题",
                     "display":"@[showTitle]"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "加载文案",
+                    "bindKey": "loadingText",
+                    "desc": "加载过程中的提示文案",
+                    "default": "加载中..."
+                },
+                {
+                    "type": "input",
+                    "layoutType": "block",
+                    "text": "加载完成文案",
+                    "bindKey": "finishedText",
+                    "desc": "加载完成后的提示文案",
+                    "default": "没有更多了"
                 },
                 {
                     "type": "select",
@@ -333,6 +365,42 @@
                             "bindKey": "boxLine"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "暂无数据样式",
+            "children":[
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "加载完成文案文字",
+                    "bindKey": "fontFinished"
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "加载文案文字",
+                    "bindKey": "fontLoading"
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "暂无数据文字",
+                    "bindKey": "fontEmptyText"
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "暂无数据图标",
+                    "bindKey": "fontEmptyIcon"
+                },
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "暂无数据图标内外边距",
+                    "bindKey": "boxEmptyIcon"
                 }
             ]
         },
@@ -763,6 +831,22 @@
                     "type": "group",
                     "text": "字段设置",
                     "children":[
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "分页条数",
+                            "bindKey": "sizeKey",
+                            "desc": "列表分页单次请求获取的数据量",
+                            "default": "size"
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "分页page",
+                            "bindKey": "pageKey",
+                            "desc": "分页当前页对应的字段",
+                            "default": "page"
+                        },
                         {
                             "type": "dataSourceFiledSelect",
                             "layoutType": "inline",

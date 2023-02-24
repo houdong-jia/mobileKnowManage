@@ -59,6 +59,20 @@
       "className": "IBottomButtons",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.knowmanage.knowledgeTopic",
+      "comName": "知识专题",
+      "className": "IKnowledgeTopic",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobileKnowManage.floatButton",
+      "comName": "悬浮按钮",
+      "className": "IFloatButton",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }

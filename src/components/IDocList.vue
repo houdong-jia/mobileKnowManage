@@ -296,7 +296,7 @@ export default {
           this.pageIndex = this.pageIndex + 1;
         }
         
-        if (this.data.length > data.total) {
+        if (this.data.length >= data.total) {
           this.finished = true;
         }
       })

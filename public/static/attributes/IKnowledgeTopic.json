@@ -1,7 +1,7 @@
 {
-  "classId": "idm.component.mobile.bottomButtons",
-  "comName": "底部按钮组",
-  "className": "IBottomButtons",
+  "classId": "idm.component.mobile.knowledgeTopic",
+  "comName": "知识专题",
+  "className": "IKnowledgeTopic",
   "comType": "common",
   "comLangue": "vue",
   "compositeAttr": [
@@ -19,205 +19,77 @@
       "type": "group",
       "text": "基本属性",
       "desc": "提供设置组件能达到展示效果的基本属性设置信息",
-      "children": []
-    },
-    {
-      "type": "table",
-      "bindKey": "buttons",
-      "tabText": "按钮[index]",
-      "text": "按钮组设置",
-      "desc": "设置按钮相关内容",
-      "default":[
-        {
-          "key":"collect",
-          "textType":"fixed",
-          "layout":"upDown",
-          "icon":"",
-          "align":"left",
-          "text":"12",
-          "showBorder":false
-        },
-        {
-          "key":"like",
-          "textType":"fixed",
-          "layout":"upDown",
-          "icon":"",
-          "align":"left",
-          "text":"121",
-          "showBorder":false
-        },
-        {
-          "key":"like",
-          "textType":"fixed",
-          "layout":"leftRight",
-          "icon":"",
-          "align":"right",
-          "text":"纠错",
-          "showBorder":true
-        }
-      ],
       "children": [
         {
           "type": "input",
           "layoutType": "inline",
-          "text": "标识",
-          "bindKey": "key",
-          "desc": "唯一标识，必填"
+          "text": "标题",
+          "bindKey": "headText",
+          "default": "学习精选"
         },
         {
-          "type": "select",
+          "type": "pageSelect",
           "layoutType": "inline",
-          "text": "文本类型",
-          "bindKey": "textType",
-          "desc": "文本值的类型",
-          "default": "fixed",
-          "dictionary":[
+          "text": "更多页面",
+          "bindKey": "showMoreUrl",
+          "desc": "点击更多后触发跳转到的页面选择"
+        },
+        {
+          "type": "radio",
+          "styleType": "radio",
+          "layoutType": "inline",
+          "text": "显示标题",
+          "bindKey": "isShowHeadText",
+          "desc": "设置是否显示标题",
+          "default": true,
+          "dictionary": [
             {
-                "label":"固定值",
-                "value":"fixed"
+              "label": "显示",
+              "value": true
             },
             {
-              "label": "页面统一接口",
-              "value": "pageCommonInterface"
-            },
-            {
-              "label": "自定义函数",
-              "value": "customFunction"
+              "label": "隐藏",
+              "value": false
             }
           ]
         },
         {
-          "type": "input",
+          "type": "radio",
+          "styleType": "radio",
           "layoutType": "inline",
-          "text": "结果集名",
-          "bindKey": "dataName",
-          "desc": "页面接口设定的结果集名称，位置为：页面设置》高级设置》页面接口",
-          "default": "",
-          "placeholder": "示例：resultData",
-          "display": "@[textType=='pageCommonInterface']"
-      },
-      {
-          "type": "textarea",
-          "layoutType": "inline",
-          "text": "显示字段",
-          "bindKey": "dataFiled",
-          "desc": "根据接口返回数据格式指定结果集的字段，比如结果集名为resultData（自定义接口忽略）且它的值为{data:{filedName:[{\"text\":\"\",\"value\":\"\",\"check\":true}]}}，则这里应该填写data.filedName",
-          "default": "",
-          "placeholder": "示例：data.filedName 或者 [0].data[0].filedName",
-          "display": "@[textType=='pageCommonInterface']"
-      },
-        {
-          "type": "input",
-          "layoutType": "inline",
-          "text": "文本",
-          "bindKey": "text",
-          "desc": "文本内容",
-          "display":"@[textType=='fixed']"
-        },
-        {
-          "type": "iconSelect",
-          "layoutType": "inline",
-          "text": "图标",
-          "bindKey": "icon",
-          "desc": "用于选择按钮图标"
-        },
-        {
-          "type": "select",
-          "layoutType": "inline",
-          "text": "对齐方式",
-          "bindKey": "align",
-          "desc": "用于配置按钮的对齐方式",
-          "dictionary":[
+          "text": "显示更多",
+          "bindKey": "isShowMore",
+          "desc": "设置是否显示右侧更多",
+          "default": true,
+          "dictionary": [
             {
-                "label":"居左",
-                "value":"left"
+              "label": "显示",
+              "value": true
             },
             {
-              "label": "居右",
-              "value": "right"
-            }
-          ],
-          "default":"left"
-        },
-        {
-          "type": "select",
-          "layoutType": "inline",
-          "text": "布局",
-          "bindKey": "layout",
-          "desc": "用于选择按钮图标",
-          "dictionary":[
-            {
-                "label":"上下",
-                "value":"upDown"
-            },
-            {
-              "label": "左右",
-              "value": "leftRight"
-            }
-          ],
-          "default":"leftRight"
-        },
-        {
-          "type": "box",
-          "layoutType": "block",
-          "text": "内外边距",
-          "bindKey": "box"
-        },
-        {
-          "type": "switch",
-          "layoutType": "inline",
-          "text": "显示边框",
-          "bindKey": "showBorder",
-          "desc": "是否显示按钮边框",
-          "dictionary":[
-            {
-                "label":"是",
-                "value":true
-            },
-            {
-              "label": "否",
+              "label": "隐藏",
               "value": false
             }
-          ],
-          "default":false
+          ]
         },
         {
-          "type": "colorPicker",
+          "type": "radio",
+          "styleType": "radio",
           "layoutType": "inline",
-          "text": "背景色",
-          "bindKey": "bgColor",
-          "placeholder": "请选择颜色",
-          "display":"@[showBorder]"
-        },
-        {
-          "type": "border",
-          "layoutType": "block",
-          "text": "边框",
-          "bindKey": "border",
-          "display":"@[showBorder]"
-        },
-        {
-          "type": "font",
-          "layoutType": "block",
-          "text": "文字样式",
-          "bindKey": "font"
-        },
-        {
-          "type": "actionSelect",
-          "layoutType": "block",
-          "text": "文本自定义函数",
-          "bindKey": "textCustomFunction",
-          "desc": "用于自定义按钮文本值",
-          "multiple": false,
-          "display":"@[textType=='customFunction']"
-        },
-        {
-          "type": "actionSelect",
-          "layoutType": "block",
-          "text": "点击自定义函数",
-          "bindKey": "clickCustomFunction",
-          "desc": "用于绑定按钮点击触发的函数",
-          "multiple": false
+          "text": "播放量",
+          "bindKey": "isShowVideoNum",
+          "desc": "是否显示视屏播放量",
+          "default": true,
+          "dictionary": [
+            {
+              "label": "显示",
+              "value": true
+            },
+            {
+              "label": "隐藏",
+              "value": false
+            }
+          ]
         }
       ]
     },
@@ -227,12 +99,6 @@
       "desc": "点击？查看样式设置用法指南",
       "helpUrl": "",
       "children": [
-        {
-          "type": "box",
-          "layoutType": "block",
-          "text": "内外边距",
-          "bindKey": "box"
-        },
         {
           "type": "inlineGroup",
           "text": "宽高",
@@ -253,9 +119,25 @@
               "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
               "bindKey": "height",
               "width": "60px",
-              "default": "70px"
+              "default": "100%"
             }
           ]
+        },
+        {
+          "type": "box",
+          "layoutType": "block",
+          "text": "内外边距",
+          "bindKey": "box",
+          "default": {
+            "marginTopVal": "16px",
+            "marginRightVal": "10px",
+            "marginBottomVal": "16px",
+            "marginLeftVal": "10px",
+            "paddingTopVal": "0",
+            "paddingRightVal": "12px",
+            "paddingBottomVal": "0",
+            "paddingLeftVal": "12px"
+          }
         },
         {
           "type": "group",
@@ -438,10 +320,180 @@
           ]
         },
         {
-          "type": "border",
-          "layoutType": "block",
-          "text": "边框",
-          "bindKey": "border"
+          "type": "group",
+          "text": "外层容器边框",
+          "desc": "点击？查看背景设置用法指南",
+          "helpUrl": "",
+          "children": [
+            {
+              "type": "border",
+              "layoutType": "block",
+              "text": "边框",
+              "bindKey": "border",
+              "default": {
+                "border": {
+                  "top": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 243,
+                        "g": 243,
+                        "b": 243,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "right": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 243,
+                        "g": 243,
+                        "b": 243,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "bottom": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 243,
+                        "g": 243,
+                        "b": 243,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "left": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 243,
+                        "g": 243,
+                        "b": 243,
+                        "a": 1
+                      }
+                    }
+                  }
+                },
+                "radius": {
+                  "leftTop": {
+                    "radius": 6,
+                    "radiusUnit": "px"
+                  },
+                  "rightTop": {
+                    "radius": 6,
+                    "radiusUnit": "px"
+                  },
+                  "leftBottom": {
+                    "radius": 6,
+                    "radiusUnit": "px"
+                  },
+                  "rightBottom": {
+                    "radius": 6,
+                    "radiusUnit": "px"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "text": "视频卡片边框",
+          "desc": "点击？查看背景设置用法指南",
+          "helpUrl": "",
+          "children": [
+            {
+              "type": "border",
+              "layoutType": "block",
+              "text": "视频卡片边框",
+              "bindKey": "videoBorder",
+              "default": {
+                "border": {
+                  "top": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 237,
+                        "g": 237,
+                        "b": 237,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "right": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 237,
+                        "g": 237,
+                        "b": 237,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "bottom": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 237,
+                        "g": 237,
+                        "b": 237,
+                        "a": 1
+                      }
+                    }
+                  },
+                  "left": {
+                    "style": "solid",
+                    "width": 1,
+                    "widthUnit": "px",
+                    "colors": {
+                      "rgba": {
+                        "r": 237,
+                        "g": 237,
+                        "b": 237,
+                        "a": 1
+                      }
+                    }
+                  }
+                },
+                "radius": {
+                  "leftTop": {
+                    "radius": 4,
+                    "radiusUnit": "px"
+                  },
+                  "rightTop": {
+                    "radius": 4,
+                    "radiusUnit": "px"
+                  },
+                  "leftBottom": {
+                    "radius": 4,
+                    "radiusUnit": "px"
+                  },
+                  "rightBottom": {
+                    "radius": 4,
+                    "radiusUnit": "px"
+                  }
+                }
+              }
+            }
+          ]
         },
         {
           "type": "input",
@@ -453,8 +505,14 @@
         {
           "type": "font",
           "layoutType": "block",
-          "text": "文字",
-          "bindKey": "font"
+          "text": "标题文字",
+          "bindKey": "headerLeftFont"
+        },
+        {
+          "type": "font",
+          "layoutType": "block",
+          "text": "视频简介文字",
+          "bindKey": "videoBottomFont"
         }
       ]
     },
@@ -557,97 +615,87 @@
           "type": "dataSourceSelect",
           "layoutType": "inline",
           "text": "数据源",
-          "desc": "用于选择时间轴的数据源",
+          "desc": "用于选择视频的数据源",
           "bindKey": "dataSource",
           "dataSourceUrl":"/ctrl/dataSource/getDatasourceByGroup"
         },
         {
-            "type": "actionSelect",
-            "layoutType": "block",
-            "text": "自定义参数函数",
-            "bindKey": "customParamFunction",
-            "desc": "自定义参数函数，返回的对象则会被合并到数据源参数中",
-            "multiple": false
-        },
-        {
           "type": "group",
           "text": "字段设置",
-          "desc": "页面数据绑定",
+          "desc": "设置从列表项中展示的对应字段",
           "children": [
             {
               "type": "dataSourceFiledSelect",
               "layoutType": "inline",
-              "text": "日期",
-              "bindKey": "labelInterface",
-              "default": "label"
+              "text": "显示字段",
+              "bindKey": "dataFiled",
+              "desc": "视频列表字段的字段名",
+              "default": "data",
+              "placeholder": "示例：data 或者 [0].data[0]"
             },
             {
               "type": "dataSourceFiledSelect",
               "layoutType": "inline",
-              "text": "标题",
-              "bindKey": "titleInterface",
-              "default": "title"
+              "text": "视频图片",
+              "desc": "每个视频的插图字段",
+              "bindKey": "videoImage",
+              "default": "imgUrl"
             },
             {
               "type": "dataSourceFiledSelect",
               "layoutType": "inline",
-              "text": "详情",
-              "bindKey": "detailInterface",
-              "default": "detail"
+              "text": "播放量",
+              "desc": "每个视频的播放量字段",
+              "bindKey": "videoAmountOfPlay",
+              "default": "visitor"
             },
             {
               "type": "dataSourceFiledSelect",
               "layoutType": "inline",
-              "text": "描述",
-              "bindKey": "descInterface",
-              "default": "desc"
+              "text": "发布时间",
+              "desc": "每个视频的发布时间字段",
+              "bindKey": "videoReleaseDate",
+              "default": "time"
             },
             {
               "type": "dataSourceFiledSelect",
               "layoutType": "inline",
-              "text": "图标路径",
-              "bindKey": "iconInterface",
-              "default": "icon"
-            },
-            {
-              "type": "dataSourceFiledSelect",
-              "layoutType": "inline",
-              "text": "图标描述",
-              "bindKey": "iconTextInterface",
-              "default": "iconText"
+              "text": "视频详情",
+              "desc": "每个视频的描述字段",
+              "bindKey": "videoIntroduction",
+              "default": "name"
             }
           ]
         },
         {
-            "type": "select",
-            "layoutType": "inline",
-            "text": "刷新KEY",
-            "bindKey": "messageRefreshKey",
-            "desc": "根据组件接收到的消息KEY来刷新数据",
-            "default": "",
-            "multiple": true,
-            "placeholder": "示例：inbox,info",
-            "ctrlAttrObject": {
-                "mode": "tags"
-            },
-            "dictionary": [
-                {
-                    "label": "inbox",
-                    "value": "inbox"
-                },
-                {
-                    "label": "info",
-                    "value": "info"
-                }
-            ]
+          "type": "pageSelect",
+          "layoutType": "inline",
+          "text": "视频跳转",
+          "bindKey": "listJumpUrl",
+          "desc": "设置视频跳转的页面"
         },
         {
-          "type": "actionSelect",
-          "layoutType": "block",
-          "text": "统一点击自定义函数",
-          "bindKey": "allClickCustomFunction",
-          "desc": "用于绑定按钮点击触发的统一函数",
-          "multiple": false
+          "type": "select",
+          "layoutType": "inline",
+          "text": "刷新KEY",
+          "bindKey": "messageRefreshKey",
+          "desc": "根据组件接收到的消息KEY来刷新数据",
+          "default": "",
+          "multiple": true,
+          "placeholder": "示例：inbox,info",
+          "ctrlAttrObject": {
+            "mode": "tags"
+          },
+          "dictionary": [
+            {
+              "label": "inbox",
+              "value": "inbox"
+            },
+            {
+              "label": "info",
+              "value": "info"
+            }
+          ]
         }
       ]
     }
