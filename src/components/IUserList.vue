@@ -607,7 +607,7 @@ export default {
          */
         onReInitDataMsgKey(conditionObject,messageKey){
             this.conditionObject[messageKey] = conditionObject;
-            this.initData()
+            this.initData(1)
         },
         receiveBroadcastMessage(object) {
             console.log("组件收到消息", object)
