@@ -4,7 +4,7 @@
             :propData="propData" :pageData="pageData" :isFirst="isFirst" :isLoading="isLoading"
             @handleClickMore="handleClickMore">
             <template #list>
-                <div v-for="(item, index) in pageData.value" :key="index" class="box-line d-flex just-b"
+                <div v-for="(item, index) in pageData.value" :key="index" class=" box-line d-flex just-b"
                     @click="handleItemClick(item)">
                     <img v-if="propData.isShowLeftImage"
                         :src="getImageUrl(item)" alt=""
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="propData.styleType === 'styleTwo'" class="d-flex flex-d-c just-a flex-1">
+                    <div v-if="propData.styleType === 'styleTwo'" class="d-flex flex-d-c just-a flex-1 ">
                         <div class="common-list-title text-o-e-2">
                             {{ getDataField(propData.titleField, item) }}
                         </div>
@@ -61,11 +61,11 @@
 }}</span>
                         </div>
                     </div>
-                    <div v-if="propData.styleType === 'customFunction'" class="d-flex flex-d-c just-b flex-1">
+                    <div v-if="propData.styleType === 'customFunction'" class="d-flex flex-d-c just-b flex-1 iknowledgeSubjectList">
                         <div class="common-list-title text-o-e-2">
                             {{ getDataField(propData.titleField, item) }}
                         </div>
-                        <div class="d-flex just-b align-c common-list-process-text"
+                        <div class="d-flex  align-c common-list-process-text"
                             v-html="customFunctionContent(item)">
 
                         </div>
@@ -390,6 +390,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.iknowledgeSubjectList{
+    justify-content:center;
+}
 .box-line:last-child {
     border-bottom: 0 !important;
 }
