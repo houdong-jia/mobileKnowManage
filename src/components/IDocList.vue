@@ -908,7 +908,7 @@ export default {
         letter-spacing: 0;
         line-height: 22px;
         font-weight: 400;
-        text-indent: 2em;
+        // text-indent: 2em;
         margin: 5px 0;
         overflow: hidden;
         text-overflow: ellipsis;
