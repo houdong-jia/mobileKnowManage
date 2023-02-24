@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div v-if="propData.buttonList && propData.buttonList.length" class="list_right flex_end">
-                        <div @click="clickButton(item)" v-for="(item,index) in getButtonList" :style="getButtonStyle(item)" :key="index" class="button_list">{{ item.text }}</div>
+                        <div @click="clickButton(btn,item)" v-for="(btn,index) in getButtonList" :style="getButtonStyle(btn)" :key="index" class="button_list">{{ btn.text }}</div>
                     </div>
                 </div>
             </van-list>
@@ -176,7 +176,7 @@ export default {
                 return IDM.url.getModuleAssetsWebPath(require(`../assets/user.png`),this.moduleObject)
             }
         },
-        clickButton(item) {
+        clickButton(item,row) {
             if( this.moduleObject.env=="develop" ){
                 return;
             }
@@ -188,6 +188,7 @@ export default {
                 window[item.name]&&window[item.name].call(this,{
                     urlData:urlObject,
                     pageId,
+                    row,
                     customParam:item.param,
                     _this:this
                 });
@@ -612,7 +613,7 @@ export default {
         receiveBroadcastMessage(object) {
             console.log("组件收到消息", object)
             if( object.type && object.type=="linkageReload" ){
-                this.initData();
+                this.initData(1);
             }
             if(object.type&&object.type=="linkageDemand"){
                 if(object.messageKey){
