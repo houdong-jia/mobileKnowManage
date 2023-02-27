@@ -57,8 +57,8 @@
                         </div>
                         <div class="d-flex just-b align-c common-list-process-text text-o-e">
                             <span>观看至{{ getDataField(propData.processField, item) }}</span><span>{{
-        getDataField(propData.timeField, item)
-}}</span>
+                                getDataField(propData.timeField, item)
+                        }}</span>
                         </div>
                     </div>
                     <div v-if="propData.styleType === 'customFunction'" class="d-flex flex-d-c just-b flex-1 iknowledgeSubjectList">
@@ -81,7 +81,7 @@ import commonListMixin from '../mixins/commonList'
 import adaptationScreenMixin from '../mixins/adaptationScreen'
 import { getCommonListData } from '../mock/mockData'
 export default {
-    name: 'IknowledgeSubjectList',
+    name: 'IKnowledgeSubjectList',
     components: {
         ICommonListContainer
     },
@@ -377,7 +377,15 @@ export default {
                 return
             }
             this.isFirst = false
-            this.getDataSourceData()
+            switch(this.propData.dataType) {
+                case 'dataSource':
+                  this.getDataSourceData()
+                  break
+                case 'customFunction':
+                    this.functionGetData()
+                    break
+
+            }
         },
         setContextValue(object) {
             console.log('统一接口设置的值', object)
