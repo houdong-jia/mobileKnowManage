@@ -80,6 +80,20 @@
       "className": "IknowledgeSubjectList",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobile.iknowallcomment",
+      "comName": "知识库全部评论",
+      "className": "IKnowAllComment",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobile.iknowcommonetdetail",
+      "comName": "知识库评论详情",
+      "className": "IKnowCommentDetail",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }
