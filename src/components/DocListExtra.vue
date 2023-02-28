@@ -26,9 +26,7 @@
             <use :xlink:href="`#${extra.icon && extra.icon[0]}`" />
           </svg>
         </div>
-        <div class="text">
-          {{extra.textFiled.includes("@[") ? IDM.express.replace(extra.textFiled, item, true) : extra.textFiled}}
-        </div>
+        <div class="text" v-if="extra.textFiled" v-html="getHtml(extra, item)" />
       </div>
     </template>
   </div>
@@ -39,7 +37,12 @@ export default {
     return {
     }
   },
-  props: ['extraList', 'item', 'index', 'getExpressData', 'onExtraClick']
+  props: ['extraList', 'item', 'index', 'getExpressData', 'onExtraClick'],
+  methods: {
+    getHtml(extra, item) {
+      return extra.textFiled.includes("@[") ? IDM.express.replace(extra.textFiled, item, true) : extra.textFiled;
+    }
+  }
 }
 </script>
 <style lang="scss">
