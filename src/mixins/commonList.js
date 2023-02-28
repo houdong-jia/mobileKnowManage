@@ -187,6 +187,22 @@ export default {
                     })
         },
         /**
+         * 函数获取数据
+         */
+         functionGetData() {
+            if(this.propData?.customFunction?.length > 0) {
+                const func = this.propData.paramsFunc[0]
+                this.pageData = window?.[func.name]?.call(this, {
+                    routerParams: IDM.router.getParam(this.moduleObject.routerId),
+                    ...this.chooseTabParams,
+                    limit: this.propData.limit,
+                    start: this.currentPage,
+                    ...func.param,
+                }) || {}
+            }
+        },
+        /**
+        /**
          * 获取数据源数据
          */
         getDataSourceData() {

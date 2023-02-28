@@ -1,6 +1,6 @@
 {
-    "classId": "idm.component.knowmanage.knowledgeSubjectList",
-    "comName": "知识专题列表",
+    "classId": "idm.component.mobile.knowledgeSubjectList",
+    "comName": "通用列表",
     "className": "IknowledgeSubjectList",
     "comType": "common",
     "comLangue": "vue",
@@ -1268,11 +1268,39 @@
             "desc": "点击？查看高级设置用法指南",
             "children": [
                 {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "数据模式",
+                    "bindKey": "dataType",
+                    "desc": "设置组件数据模式",
+                    "default": "dataSource",
+                    "dictionary": [
+                        {
+                            "label": "数据源",
+                            "value": "dataSource"
+                        },
+                        {
+                            "label": "自定义函数",
+                            "value": "customFunction"
+                        }
+                    ]
+                },
+                {
                     "type": "dataSourceSelect",
                     "layoutType": "inline",
                     "text": "数据源",
                     "desc": "数据返回示例：{value: [], count: 0, moreUrl: ''}",
-                    "bindKey": "dataSource"
+                    "bindKey": "dataSource",
+                    "display": "@[dataType === 'dataSource']"
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "自定义函数",
+                    "bindKey": "customFunction",
+                    "desc": "设置数据自定义函数",
+                    "display": "@[dataType === 'customFunction']",
+                    "multiple": false
                 },
                 {
                     "type": "select",

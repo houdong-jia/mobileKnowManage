@@ -4,7 +4,7 @@
             :propData="propData" :pageData="pageData" :isFirst="isFirst" :isLoading="isLoading"
             @handleClickMore="handleClickMore">
             <template #list>
-                <div v-for="(item, index) in pageData.value" :key="index" class="box-line d-flex just-b"
+                <div v-for="(item, index) in pageData.value" :key="index" class=" box-line d-flex just-b"
                     @click="handleItemClick(item)">
                     <img v-if="propData.isShowLeftImage"
                         :src="getImageUrl(item)" alt=""
@@ -51,21 +51,21 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="propData.styleType === 'styleTwo'" class="d-flex flex-d-c just-a flex-1">
+                    <div v-if="propData.styleType === 'styleTwo'" class="d-flex flex-d-c just-a flex-1 ">
                         <div class="common-list-title text-o-e-2">
                             {{ getDataField(propData.titleField, item) }}
                         </div>
                         <div class="d-flex just-b align-c common-list-process-text text-o-e">
                             <span>观看至{{ getDataField(propData.processField, item) }}</span><span>{{
-        getDataField(propData.timeField, item)
-}}</span>
+                                getDataField(propData.timeField, item)
+                        }}</span>
                         </div>
                     </div>
-                    <div v-if="propData.styleType === 'customFunction'" class="d-flex flex-d-c just-b flex-1">
+                    <div v-if="propData.styleType === 'customFunction'" class="d-flex flex-d-c just-b flex-1 iknowledgeSubjectList">
                         <div class="common-list-title text-o-e-2">
                             {{ getDataField(propData.titleField, item) }}
                         </div>
-                        <div class="d-flex just-b align-c common-list-process-text"
+                        <div class="d-flex  align-c common-list-process-text"
                             v-html="customFunctionContent(item)">
 
                         </div>
@@ -81,7 +81,7 @@ import commonListMixin from '../mixins/commonList'
 import adaptationScreenMixin from '../mixins/adaptationScreen'
 import { getCommonListData } from '../mock/mockData'
 export default {
-    name: 'IknowledgeSubjectList',
+    name: 'IKnowledgeSubjectList',
     components: {
         ICommonListContainer
     },
@@ -377,7 +377,15 @@ export default {
                 return
             }
             this.isFirst = false
-            this.getDataSourceData()
+            switch(this.propData.dataType) {
+                case 'dataSource':
+                  this.getDataSourceData()
+                  break
+                case 'customFunction':
+                    this.functionGetData()
+                    break
+
+            }
         },
         setContextValue(object) {
             console.log('统一接口设置的值', object)
@@ -390,6 +398,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.iknowledgeSubjectList{
+    justify-content:center;
+}
 .box-line:last-child {
     border-bottom: 0 !important;
 }

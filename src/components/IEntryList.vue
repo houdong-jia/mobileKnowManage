@@ -67,6 +67,9 @@ export default {
             return data
         },
         initData() {
+            if ( this.propData.dataSourceType == 'pageCommonInterface' ) {
+                return
+            }
             var params = this.commonParam();
             //接收其他组件联动参数
             if ( this.propData.linkageParamList && this.propData.linkageParamList.length > 0 ) {
@@ -399,6 +402,12 @@ export default {
          */
         setContextValue(object) {
             console.log("统一接口设置的值", object);
+            if (object.type != "pageCommonInterface") {
+                return;
+            }
+            if (object.key == this.propData.dataName) {
+                this.data_list = this.getExpressData(this.propData.dataName,this.propData.dataFiled,object.data);
+            }
         }
     }
 }
