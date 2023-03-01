@@ -90,6 +90,13 @@
           "desc": "查看回复更多跳转页面"
         },
         {
+          "type": "actionSelect",
+          "layoutType": "block",
+          "text": "跳转自定义携带参数",
+          "bindKey": "jumpParamsCustomFunc",
+          "desc": "跳转自定义携带参数"
+        },
+        {
           "type": "radio",
           "styleType": "radio",
           "layoutType": "inline",

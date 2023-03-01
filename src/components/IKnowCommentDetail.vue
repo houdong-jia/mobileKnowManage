@@ -21,16 +21,7 @@
     <div class="i-comment-detail-wrapper">
       <div class="i-comment-detail-main" v-if="detailInfo">
         <div class="i-comment-detail-content-left">
-          <img
-            v-if="detailInfo[propData.imgInterface]"
-            :src="IDM.url.getWebPath(detailInfo[propData.imgInterface])"
-            class="content-left-avatar"
-          />
-          <img
-            v-else
-            src="../assets/default_avatar.png"
-            class="content-left-avatar"
-          />
+          <img :src="getImageSrc(detailInfo)" class="content-left-avatar" />
         </div>
         <div class="i-comment-detail-content-right">
           <div class="content-right-top">
@@ -77,16 +68,7 @@
             :class="{ 'border-none': infoList.length - 1 === i }"
           >
             <div class="i-comment-detail-content-left">
-              <img
-                v-if="item[propData.imgInterface]"
-                :src="IDM.url.getWebPath(item[propData.imgInterface])"
-                class="content-left-avatar"
-              />
-              <img
-                v-else
-                src="../assets/default_avatar.png"
-                class="content-left-avatar"
-              />
+              <img :src="getImageSrc(item)" class="content-left-avatar" />
             </div>
             <div class="i-comment-detail-content-right">
               <div class="content-right-top">
@@ -107,8 +89,13 @@
                 </div>
                 <span class="comment-operate">
                   <span
-                    @click="likeClick(item.isLike ? 'unlike' : 'like', item)"
-                    :class="{ active: item.isLike }"
+                    @click="
+                    likeClick(
+                      item[propData.starInterface] ? 'unlike' : 'like',
+                      item
+                    )
+                  "
+                  :class="{ active: item[propData.starInterface] }"
                     ><svg-icon icon-class="commentStar" />{{
                       item[propData.starNumInterface]
                     }}</span
@@ -117,7 +104,7 @@
                     ><svg-icon icon-class="comment"
                   /></span>
                   <span
-                    v-if="item[propData.delBtnFiled]"
+                    v-if="userInfo.userid && item.fromUserId == userInfo.userid"
                     @click="delClick(item, i)"
                   >
                     <svg-icon icon-class="delete" />
@@ -185,6 +172,7 @@ export default {
       placeholder: "请输入评论",
       replyText: "",
       replyRow: null,
+      userInfo: IDM.user.getCurrentUserInfo()
     };
   },
   props: {},
@@ -209,6 +197,21 @@ export default {
   mounted() {},
   destroyed() {},
   methods: {
+    // 头像
+    getImageSrc(item) {
+      if (
+        item[this.propData.imgInterface ? this.propData.imgInterface : "img"]
+      ) {
+        return IDM.url.getWebPath(
+          item[this.propData.imgInterface ? this.propData.imgInterface : "img"]
+        );
+      } else {
+        return IDM.url.getModuleAssetsWebPath(
+          require(`../assets/user.png`),
+          this.moduleObject
+        );
+      }
+    },
     // 发布
     publishClick() {
       let commentId = "";
@@ -230,7 +233,11 @@ export default {
     likeClick(type, item) {
       this.operateRequst(type, { contentId: item.id }).then(() => {
         IDM.message.success(type == "like" ? "点赞成功" : "取消点赞成功");
-        item.isLike = !item.isLike;
+        item[this.propData.starInterface] = !item[this.propData.starInterface];
+        type == "like"
+          ? item[this.propData.starNumInterface]++
+          : item[this.propData.starNumInterface]--;
+        this.$forceUpdate();
       });
     },
     /**
@@ -269,7 +276,7 @@ export default {
     },
     getDetail() {
       // 从路由中获取
-      const detailInfo = IDM.router?.getParam(this.moduleObject.routerId);
+      const detailInfo = IDM.router?.getParam(this.moduleObject.routerId)?.commentData;
       if (detailInfo) {
         this.detailInfo = detailInfo;
         return;
@@ -334,7 +341,6 @@ export default {
      * 重载组件
      */
     reload() {
-      this.loading = true;
       this.finished = false;
       this.infoList = [];
       this.requestParams = [];
@@ -342,6 +348,7 @@ export default {
       this.replyText = "";
       this.pageIndex = 1;
       this.getDetail();
+      this.initData();
     },
     /**
      * 适配页面
@@ -624,20 +631,6 @@ export default {
               : "",
           }
         );
-
-        IDM.setStyleToPageHead(
-          "." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || "module_demo") +
-            " .i-comment-detail-wrapper .i-comment-detail-content-right .content-right-bottom",
-          {
-            color: item.mainColor
-              ? IDM.hex8ToRgbaString(item.mainColor.hex8)
-              : "",
-          }
-        );
       }
     },
     /**
@@ -681,7 +674,9 @@ export default {
         this.propData.customClickFunc.length > 0
       ) {
         let name = this.propData.customClickFunc[0].name;
-        obj = window[name] && window[name].call(this, this.getRouterParams());
+        obj =
+          window[name] &&
+          window[name].call(this, { ...obj, ...this.getRouterParams() });
       }
       return obj;
     },
@@ -690,6 +685,7 @@ export default {
      * 加载动态数据
      */
     initData() {
+      this.loading = true;
       let dataSource = this.propData.dataSource;
       if (!dataSource) {
         if (!this.moduleObject.env || this.moduleObject.env == "develop") {
@@ -792,15 +788,18 @@ export default {
           }),
         },
         (res) => {
+          this.loading = false;
+          // 为了和pc端一致
+          res = res.data;
+          // 暂无数据
+          if (!res.total || res.total === 0) {
+            this.finished = true;
+            return;
+          }
           // 页码增加
           this.pageIndex++;
 
-          if (res.length === 0) {
-            this.finished = true;
-          }
-
-          let temp = [...this.infoList, ...res.list];
-
+          let temp = [...this.infoList, ...res.rows];
           //结果去重
           let len = temp.length;
 

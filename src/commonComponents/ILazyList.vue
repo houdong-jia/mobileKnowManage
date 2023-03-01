@@ -47,14 +47,16 @@ export default {
   },
   watch:{
     finishedText(newV,oldV){
-      if (!this.finished){
-        this.$emit('load')
-      }
+      // if (!this.finished){
+      //   debugger
+      //   this.$emit('load')
+      // }
     },
     loading(newV,oldV){
-      if (newV){
-        this.$emit('load')
-      }
+      // if (newV){
+      //   debugger
+      //   this.$emit('load')
+      // }
 
       this.handleScroll()
     }
@@ -75,15 +77,13 @@ export default {
     this.timer = setInterval(()=>{
       this.handleScroll()
     }, 500);
-
     this.loading = true
     this.$emit('load')
     window.addEventListener('scroll', this.debounce(this.handleScroll))
   },
   methods: {
-
     handleScroll() {
-      if (!this.finished){
+      if (!this.finished && !this.loading && !this.modelValue){
         // 获取视窗高度
         let domHeight = window.screen.height || window.innerHeight || document.documentElement.clientHeight
         let scrollTop = document.documentElement.scrollTop || document.body.scrollTop

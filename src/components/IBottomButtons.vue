@@ -547,6 +547,7 @@ $scale: var(--i-bottom-buttons-scale);
   justify-content: space-between;
   align-items: center;
   height: 70px;
+  z-index: 1;
 
   .i-bottom-buttons-left,
   .i-bottom-buttons-right {

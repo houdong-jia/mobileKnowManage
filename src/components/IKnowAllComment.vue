@@ -50,21 +50,15 @@
       >
         <div
           class="i-all-comment-content-item"
-          v-for="(item, i) in curStatus ? infoList : infoList.slice(0,3)"
+          v-for="(item, i) in curStatus ? infoList : infoList.slice(0, 3)"
           :key="item.id"
-          :class="{ 'border-none': (curStatus ? infoList : infoList.slice(0,3)).length - 1 === i }"
+          :class="{
+            'border-none':
+              (curStatus ? infoList : infoList.slice(0, 3)).length - 1 === i,
+          }"
         >
           <div class="i-all-comment-content-left">
-            <img
-              v-if="item[propData.imgInterface]"
-              :src="IDM.url.getWebPath(item[propData.imgInterface])"
-              class="content-left-avatar"
-            />
-            <img
-              v-else
-              src="../assets/default_avatar.png"
-              class="content-left-avatar"
-            />
+            <img :src="getImageSrc(item)" class="content-left-avatar" />
           </div>
           <div class="i-all-comment-content-right">
             <div class="content-right-top">
@@ -83,7 +77,15 @@
                 >
               </div>
               <div class="comment-delete-star">
-                <span v-if="propData.showStarBtnBottom" @click="likeClick(item.isLike?'unlike':'like',item)" :class="{'active':item.isLike}"
+                <span
+                  v-if="propData.showStarBtnBottom"
+                  @click="
+                    likeClick(
+                      item[propData.starInterface] ? 'unlike' : 'like',
+                      item
+                    )
+                  "
+                  :class="{ active: item[propData.starInterface] }"
                   ><svg-icon icon-class="commentStar" />{{
                     item[propData.starNumInterface]
                   }}</span
@@ -97,9 +99,9 @@
                   }}</span
                 >
                 <span
-                  v-if="propData.showDelBtn && item[propData.delBtnFiled]"
+                  v-if="userInfo.userid && item.fromUserId == userInfo.userid"
                   class="comment-del"
-                  @click="delClick(item,i)"
+                  @click="delClick(item, i)"
                 >
                   <svg-icon icon-class="delete" />
                 </span>
@@ -143,7 +145,7 @@ export default {
         idInterface: "id",
         avatarInterface: "avatar",
         timeInterface: "time",
-        starInterface: "star",
+        starInterface: "isLike",
         starNumInterface: "starNum",
         trampleNumInterface: "trampleNum",
         btInterface: "bt",
@@ -167,6 +169,7 @@ export default {
       pageSize: 5,
       pageIndex: 1,
       curComment: "",
+      userInfo: IDM.user.getCurrentUserInfo(),
     };
   },
   props: {},
@@ -191,57 +194,83 @@ export default {
     this.convertThemeListAttrToStyleObject();
 
     // 抛出组件this
-    window[this.moduleObject.pageid] = this;
+    if (this.moduleObject.pageid) {
+      window[this.moduleObject.pageid] = this;
+    }
   },
   mounted() {},
   destroyed() {},
   methods: {
+    // 头像
+    getImageSrc(item) {
+      if (
+        item[this.propData.imgInterface ? this.propData.imgInterface : "img"]
+      ) {
+        return IDM.url.getWebPath(
+          item[this.propData.imgInterface ? this.propData.imgInterface : "img"]
+        );
+      } else {
+        return IDM.url.getModuleAssetsWebPath(
+          require(`../assets/user.png`),
+          this.moduleObject
+        );
+      }
+    },
     /**
      * 删除
      */
-    delClick(item,index) {
-      this.operateRequst("delete",{contentId:item.id}).then(()=>{
-        IDM.message.success("删除成功")
-        this.infoList.splice(index,1)
-      })
+    delClick(item, index) {
+      this.operateRequst("delete", { contentId: item.id }).then(() => {
+        IDM.message.success("删除成功");
+        this.infoList.splice(index, 1);
+      });
     },
     /**
      * 点赞取消点赞
      */
-    likeClick(type,item) {
-      this.operateRequst(type,{contentId:item.id}).then(()=>{
-        IDM.message.success(type=="like"?'点赞成功':'取消点赞成功')
-        item.isLike = !item.isLike
-      })
+    likeClick(type, item) {
+      this.operateRequst(type, { contentId: item.id }).then(() => {
+        IDM.message.success(type == "like" ? "点赞成功" : "取消点赞成功");
+        item[this.propData.starInterface] = !item[this.propData.starInterface];
+        type == "like"
+          ? item[this.propData.starNumInterface]++
+          : item[this.propData.starNumInterface]--;
+        this.$forceUpdate();
+      });
     },
     /**
      * 发布
      */
     publishClick() {
-      this.operateRequst('submit',{content:this.curComment}).then(()=>{
-        IDM.message.success("评论成功")
-        this.reload()
-      })
+      this.operateRequst("submit", { content: this.curComment }).then(() => {
+        IDM.message.success("评论成功");
+        this.reload();
+      });
     },
     // 删除 提交评论 点赞 取消点赞---请求
-    operateRequst(type,params){
+    operateRequst(type, params) {
       return new Promise((resolve, reject) => {
-        IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
-          moduleObject: this.moduleObject,
-          param:this.fileterParams({
-            type,
-            params,
-          })
-        }, (res) => {
-          if (res.code == 200) {
-            resolve(res)
-          } else {
-            IDM.message.error(res.message)
+        IDM.datasource.request(
+          this.propData?.dataSource?.[0]?.id,
+          {
+            moduleObject: this.moduleObject,
+            param: this.fileterParams({
+              type,
+              params,
+            }),
+          },
+          (res) => {
+            if (res.code == 200) {
+              resolve(res);
+            } else {
+              IDM.message.error(res.message);
+            }
+          },
+          (err) => {
+            reject(err);
           }
-        }, (err) => {
-          reject(err)
-        })
-      })
+        );
+      });
     },
     /**
      * 回复跳转
@@ -253,11 +282,23 @@ export default {
           this.propData.replyJump[0]?.id,
           {
             keep: this.propData.keepAlive,
-            params: item,
+            params: {
+              commentData: item,
+              customParams: this.jumpCustomParams(),
+            },
             enterAnim: "",
             quitAnim: "",
           }
         );
+    },
+    jumpCustomParams() {
+      if (
+        this.propData.jumpParamsCustomFunc &&
+        this.propData.jumpParamsCustomFunc.length > 0
+      ) {
+        let name = this.propData.jumpParamsCustomFunc[0].name;
+        return window[name] && window[name].call(this);
+      }
     },
     /**
      * 点赞
@@ -269,15 +310,14 @@ export default {
      * 重载组件
      */
     reload(whole) {
-      console.log("重载",whole)
       if (whole) {
         this.curStatus = false;
       }
       this.loading = true;
       this.finished = false;
       this.infoList = [];
-      this.curComment = ""
-      this.pageIndex = 1
+      this.curComment = "";
+      this.pageIndex = 1;
       this.initData();
     },
     /**
@@ -732,20 +772,6 @@ export default {
             item.key +
             " #" +
             (this.moduleObject.packageid || "module_demo") +
-            " .i-all-comment-content-item .i-all-comment-content-right .content-right-bottom",
-          {
-            color: item.mainColor
-              ? IDM.hex8ToRgbaString(item.mainColor.hex8)
-              : "",
-          }
-        );
-
-        IDM.setStyleToPageHead(
-          "." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || "module_demo") +
             " .i-all-comment-outer .i-all-comment-textarea .van-button",
           {
             "background-color": item.mainColor
@@ -786,7 +812,9 @@ export default {
         this.propData.customClickFunc.length > 0
       ) {
         let name = this.propData.customClickFunc[0].name;
-        obj = window[name] && window[name].call(this, {...obj,...this.getRouterParams()});
+        obj =
+          window[name] &&
+          window[name].call(this, { ...obj, ...this.getRouterParams() });
       }
       return obj;
     },
@@ -816,7 +844,7 @@ export default {
                   total: 100,
                   showDel: true,
                   trampleNum: 20,
-                  isLike:false
+                  isLike: false,
                 },
                 {
                   img: "",
@@ -830,7 +858,7 @@ export default {
                   from: "来自广东深圳",
                   total: 100,
                   showDel: false,
-                  isLike:true
+                  isLike: true,
                 },
                 {
                   img: "",
@@ -901,12 +929,16 @@ export default {
           }),
         },
         (res) => {
-          // 页码增加
-          this.pageIndex++;
+          this.loading = false;
+          // 为了和pc端一致
+          res = res.data;
           // 暂无数据
           if (!res.total || res.total === 0) {
             this.finished = true;
+            return;
           }
+          // 页码增加
+          this.pageIndex++;
           // 简单模式下只展示三条
           if (!this.curStatus) {
             this.finished = true;
@@ -948,8 +980,12 @@ export default {
               this.finished = true;
             }
           }
+
           this.total = res.total;
+        },
+        () => {
           this.loading = false;
+          this.finished = true;
         }
       );
     },
@@ -1181,7 +1217,7 @@ $scale: var(--i-all-comment-scale);
             }
 
             .active {
-              color: #F7B500;
+              color: #f7b500;
             }
           }
 

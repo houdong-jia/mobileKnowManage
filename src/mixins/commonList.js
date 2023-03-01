@@ -79,7 +79,7 @@ export default {
                 case '_custom_func':
                     if (this.propData.jumpItemCustomFunc && this.propData.jumpItemCustomFunc.length > 0) {
                         const funcName = this.propData.jumpItemCustomFunc[0].name
-                        window[funcName] && window[funcName].call(this)
+                        window[funcName] && window[funcName].call(this,{item})
                     }
             }
         },
@@ -333,15 +333,15 @@ export default {
                     this.pageWidth = messageObject.message.width
                     this.convertAttrToStyleObject()
                     break
-                case 'chooseTab':
-                    this.chooseTabParams = messageObject.message || {}
-                    this.pageData = {
-                        value: [],
-                        count: 0,
-                        moreUrl: ''
-                    }
-                    this.initData()
-                    break
+                // case 'chooseTab':
+                //     this.chooseTabParams = messageObject.message || {}
+                //     this.pageData = {
+                //         value: [],
+                //         count: 0,
+                //         moreUrl: ''
+                //     }
+                //     this.initData()
+                //     break
                 case 'linkageResult':
                     // 接受到数组
                     if(Array.isArray(messageObject.message)){
