@@ -12,7 +12,8 @@
     <div class="popup-wrap" v-show="show">
       <van-popup v-model="showCopy"
       :position="propData.showPosition"
-      :style="{ width: propData.boxwidth, height: propData.boxheight }">
+      :style="{ width: propData.boxwidth, height: propData.boxheight }"
+      :get-container="propData.isContainer&&'body'">
         <template v-if="propData.loadType == 'loadcatalog'">
           <div class="popup-tab" v-for="(item, index) in list" :key="index" >
             <div class="tag-title">{{item[propData.tabTitleField]}}</div>
@@ -64,10 +65,10 @@ export default {
   },
   created() {
     this.moduleObject = this.$root.moduleObject
-    this.init();
   },
   mounted() {
     this.show = this.propData.isShow;
+    this.init();
   },
   methods: {
     propDataWatchHandle (propData) {
@@ -155,6 +156,7 @@ export default {
         message: val
       })
       this.show = false;
+      this.showCopy = false;
     },
     /**
      * 组件通信：发送消息的方法
