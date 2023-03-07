@@ -914,6 +914,12 @@ export default {
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
+        p {
+          margin: 0;
+          &:not(:last-child){
+            margin-bottom: 5px;
+          }
+        }
       }
       .item-float {
         position: absolute;

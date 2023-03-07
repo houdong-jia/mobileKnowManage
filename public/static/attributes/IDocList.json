@@ -74,8 +74,7 @@
           "text": "最大行数",
           "desc": "每项内容的文字超出所设行数后将不再显示，并在最后一行末尾显示省略号",
           "bindKey": "lineClamp",
-          "default": 3,
-          "display": "@[dataType=='dataSource']"
+          "default": 3
         },
         {
           "type": "inputNumber",
