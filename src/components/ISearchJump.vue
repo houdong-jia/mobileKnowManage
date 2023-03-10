@@ -45,9 +45,13 @@
 </template>
 
 <script>
+import { Search } from 'vant';
 const devResult = () => ['关键词1','关键词2','关键词3'];
 export default {
   name: 'ISearchJump',
+  components: {
+    [Search.name]: Search
+  },
   data() {
     return {
       moduleObject: {},
