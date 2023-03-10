@@ -94,6 +94,13 @@
       "className": "IKnowCommentDetail",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobile.iremotesearch",
+      "comName": "远程搜索框",
+      "className": "IRemoteSearch",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }

@@ -17,11 +17,11 @@
           <div class="popup-tab" v-for="(item, index) in list" :key="index" >
             <div class="tag-title">{{item[propData.tabTitleField]}}</div>
             <div class="tab-ul">
-              <div class="tag-li" :class="chooseVal==subitem && 'active'"
-                v-for="(subitem, subindex) in item[propData.tagContentFiled].split(',')"
+              <div class="tag-li" :class="chooseVal==subitem.id && 'active'"
+                v-for="(subitem, subindex) in item[propData.tagContentFiled]"
                 :key="subindex"
                 @click="handleClick(subitem)">
-                {{subitem}}
+                {{subitem[propData.tabTitleField]}}
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default {
       window.IDM.setStyleToPageHead(this.moduleObject.id + " .popup-wrap .tag-title", tipsStyleObj);
       window.IDM.setStyleToPageHead(this.moduleObject.id + " .popup-wrap .popup-tab+.popup-tab", catalogObject);
       window.IDM.setStyleToPageHead(this.moduleObject.id + " .popup-wrap .tag-li", tagObject);
-      window.IDM.setStyleToPageHead(this.moduleObject.id + " .popup-wrap .tag-li .active", activeObject);
+      window.IDM.setStyleToPageHead(this.moduleObject.id + " .popup-wrap .tag-li.active", activeObject);
     },
     /**
      * 组件通信：接收消息的方法
@@ -148,6 +148,12 @@ export default {
     },
     handleClick (val) {
       this.chooseVal = val;
+      // 自定义函数
+      const func = this.propData.customFuncClickTab?.[0]
+      window[func.name] && window[func.name].call(this,{
+        tab:val,
+        _this:this
+      });
       // 发送消息给组件
       this.sendBroadcastMessage({
         type: this.propData.receiveKey,

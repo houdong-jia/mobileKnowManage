@@ -2,7 +2,9 @@
     <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="IPersonalCenter_app">
         <div class="IPersonalCenter_app_top">
             <div v-if="propData.showTitle" class="header flex_center">
-                <SvgIcon @click="goBack()" v-if="propData.showBackButton" icon-class="back"></SvgIcon>
+                <span @click="goBack()" class="back-icon">
+                    <SvgIcon v-if="propData.showBackButton" icon-class="back"></SvgIcon>
+                </span>
                 <span>{{ propData.title || '标题' }}</span>
             </div>
             <div class="info flex_between">
@@ -98,6 +100,7 @@ export default {
             let urlObject = window.IDM.url.queryObject(),
             pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
             var clickFunction = this.propData.clickFunctionBack;
+            console.log(clickFunction,1111111111111111)
             clickFunction&&clickFunction.forEach(item=>{
                 window[item.name]&&window[item.name].call(this,{
                     urlData:urlObject,
@@ -539,12 +542,14 @@ export default {
             padding: 30px 0;
             position: relative;
             text-align: center;
-            .svg-icon{
+            .back-icon {
                 position: absolute;
                 left: 15px;
-                font-size: 18px;
-                color: white;
-                font-weight: 500;
+                .svg-icon{
+                    font-size: 18px;
+                    color: white;
+                    font-weight: 500;
+                }
             }
             span{
                 font-size: 17px;

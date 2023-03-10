@@ -6,7 +6,7 @@
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
   <div
-    class="i-bottom-buttons-outer"
+    class="i-remote-search-outer"
     idm-ctrl="idm_module"
     :id="moduleObject.id"
     :idm-ctrl-id="moduleObject.id"
@@ -17,94 +17,65 @@
       idm-ctrl-id：组件的id，这个必须不能为空
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选
     -->
-    <div class="i-bottom-buttons-left">
-      <template v-for="(item, index) in buttons">
-        <div
-          v-if="item.align === 'left'"
-          class="i-bottom-buttons-item"
-          :key="index"
-          :class="[
-            { upDown: item.layout == 'upDown' },
-            { border: item.showBorder },
-            { active: item.active },
-          ]"
-          :style="item.styleObject"
-          @click="btnClick(item)"
-        >
-          <span class="item-icon" v-if="item.icon && item.icon.length > 0">
-            <svg class="idm_filed_svg_icon" aria-hidden="true">
-              <use :xlink:href="`#${item.icon && item.icon[0]}`" />
-            </svg>
-          </span>
-          <span>{{ item.text }}</span>
-        </div>
-      </template>
-    </div>
-    <div class="i-bottom-buttons-right">
-      <template v-for="(item, index) in buttons">
-        <div
-          v-if="item.align === 'right'"
-          class="i-bottom-buttons-item"
-          :key="index"
-          :class="[
-            { upDown: item.layout == 'upDown' },
-            { border: item.showBorder },
-            { active: item.active }
-          ]"
-          :style="item.styleObject"
-          @click="btnClick(item)"
-        >
-          <span class="item-icon" v-if="item.icon && item.icon.length > 0">
-            <svg class="idm_filed_svg_icon" aria-hidden="true">
-              <use :xlink:href="`#${item.icon && item.icon[0]}`" />
-            </svg>
-          </span>
-          <span>{{ item.text }}</span>
-        </div>
-      </template>
+    <a-select
+      mode="multiple"
+      label-in-value
+      :value="selectValue"
+      :placeholder="propData.placeholder"
+      style="width: 100%"
+      :size="propData.size"
+      :filter-option="false"
+      :not-found-content="fetching ? undefined : null"
+      @search="fetchUser"
+      @change="handleChange"
+    >
+      <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+      <a-select-option v-for="d in options" :key="d[propData.valueInterface]">
+        {{ d[propData.labelInterface] }}
+      </a-select-option>
+    </a-select>
+    <div
+      v-show="
+        propData.showDragContainer &&
+        (this.moduleObject.env != 'production' || propData.showDragContainer)
+      "
+      class="idm_itabs_drag_container"
+      :style="{ left: propData.dragContainerX, top: propData.dragContainerY }"
+    >
+      <div
+        class="drag_container"
+        idm-ctrl-inner
+        :idm-ctrl-id="moduleObject.id"
+        idm-container-index="1"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
+import debounce from "lodash/debounce";
 
 export default {
-  name: "IBottomButtons",
+  name: "IRemoteSearch",
   data() {
+    this.lastFetchId = 0;
+    this.fetchUser = debounce(this.fetchUser, 800);
     return {
       moduleObject: {},
       propData: this.$root.propData.compositeAttr || {
-        buttons: [
-          {
-            key: "collect",
-            textType: "fixed",
-            layout: "upDown",
-            icon: "",
-            align: "left",
-            text: "12",
-            showBorder: false,
-          },
-          {
-            key: "like",
-            textType: "fixed",
-            layout: "upDown",
-            icon: "",
-            align: "left",
-            text: "121",
-            showBorder: false,
-          },
-          {
-            key: "like",
-            textType: "fixed",
-            layout: "leftRight",
-            icon: "",
-            align: "right",
-            text: "纠错",
-            showBorder: true,
-          },
-        ],
+        placeholder: "请输入关键词",
+        size: "default",
+        multiple: true,
+        showLeftIcon: true,
+        labelInterface: "label",
+        valueInterface: "value",
+        dragContainerY: "8px",
+        dragContainerX: "10%",
+        showDragContainer: false,
       },
-      buttons: [],
+      selectValue: [],
+      options: [],
+      fetching: false,
     };
   },
   props: {},
@@ -117,27 +88,82 @@ export default {
   mounted() {},
   destroyed() {},
   methods: {
-    /**
-     * 按钮点击
-     */
-    btnClick(item){
-      const func = item.clickCustomFunction && item.clickCustomFunction[0];
-      func && window[func.name] &&
-      window[func.name].call(this, {
-        commonParam: this.commonParam(),
-        item: item,
-        customParams:func.param,
-        _this: this,
+    handleChange(selectValue) {
+      Object.assign(this, {
+        selectValue,
       });
+    },
+    // 过滤接口参数
+    customParam(query) {
+      let obj = {};
+      if (
+        this.propData.customParamFunc &&
+        this.propData.customParamFunc.length > 0
+      ) {
+        let name = this.propData.customParamFunc[0].name;
+        obj =
+          window[name] &&
+          window[name].call(this, {
+            query,
+          });
+      }
+      return obj;
+    },
+    // 请求
+    fetchUser(query) {
+      console.log(query);
+      this.lastFetchId += 1;
+      const fetchId = this.lastFetchId;
+      this.fetching = true;
 
-      const allFunc = this.propData.allClickCustomFunction && this.propData.allClickCustomFunction[0];
-      allFunc && window[allFunc.name] &&
-      window[allFunc.name].call(this, {
-        commonParam: this.commonParam(),
-        item: item,
-        customParams:allFunc.param,
-        _this: this,
-      });
+      let dataSource = this.propData.dataSource;
+      if (
+        !this.moduleObject.env ||
+        this.moduleObject.env != "production" ||
+        !dataSource
+      ) {
+        if (fetchId !== this.lastFetchId) {
+          // for fetch callback order
+          return;
+        }
+        this.options = [
+          {
+            value: "1",
+            label: "张三",
+          },
+          {
+            value: "2",
+            label: "李四",
+          },
+          {
+            value: "3",
+            label: "王五",
+          },
+        ];
+        this.fetching = false;
+        return;
+      }
+      IDM.datasource.request(
+        this.propData.dataSource[0]?.id,
+        {
+          moduleObject: this.moduleObject,
+          param: {
+            query,
+            ...this.customParam(query),
+          },
+        },
+        (res) => {
+          if (fetchId !== this.lastFetchId) {
+            // for fetch callback order
+            return;
+          }
+          this.fetching = false;
+          this.options = res;
+        },
+        () => {
+          this.fetching = false;
+        }
+      );
     },
     /**
      * 适配页面
@@ -163,41 +189,7 @@ export default {
     /**
      * 初始化组件属性
      */
-    initPropData() {
-      this.propData.buttons.forEach((item) => {
-        // 样式
-        let styleObject = {};
-        if (item.bgColor && item.bgColor.hex8) {
-          styleObject["backgroundColor"] = IDM.hex8ToRgbaString(
-            item.bgColor.hex8
-          );
-        }
-        if (item.border) {
-          IDM.style.setBorderStyle(styleObject, item.border);
-        }
-        if(item.font){
-          IDM.style.setFontStyle(styleObject, item.font);
-        }
-        if(item.box) {
-          IDM.style.setBoxStyle(styleObject, item.box);
-        }
-        item.styleObject = styleObject;
-
-        // 自定义文本
-        if (item.textType === "customFunction") {
-          const func = item.textCustomFunction && item.textCustomFunction[0];
-          item.text =
-            func && window[func.name] &&
-            window[func.name].call(this, {
-              commonParam: this.commonParam(),
-              customParams:func.param,
-              item: item,
-              _this: this,
-            });
-        }
-      });
-      this.buttons = this.propData.buttons;
-    },
+    initPropData() {},
     /**
      * 把属性转换成样式对象
      */
@@ -205,7 +197,7 @@ export default {
       var styleObject = {};
 
       const scale = this.getScale(pageSize.width);
-      styleObject["--i-bottom-buttons-scale"] = scale;
+      styleObject["--i-remote-search-scale"] = scale;
 
       if (this.propData.bgSize && this.propData.bgSize == "custom") {
         styleObject["background-size"] =
@@ -401,7 +393,7 @@ export default {
         //     item.key +
         //     " #" +
         //     (this.moduleObject.packageid || "module_demo") +
-        //     " .i-bottom-buttons-item .item-style .item-style-circle",
+        //     " .i-remote-search-item .item-style .item-style-circle",
         //   {
         //     "border-color": item.mainColor
         //       ? IDM.hex8ToRgbaString(item.mainColor.hex8)
@@ -477,6 +469,7 @@ export default {
      */
     receiveBroadcastMessage(messageObject) {
       console.log("组件收到消息", messageObject);
+      let func;
       switch (messageObject.type) {
         case "websocket":
           if (this.propData.messageRefreshKey && messageObject.message) {
@@ -499,110 +492,45 @@ export default {
         case "pageResize":
           this.convertAttrToStyleObject(messageObject.message);
           break;
+        case this.propData.submitMessageKey:
+          func = this.propData.submitFunction?.[0]
+          func && window[func.name] && window[func.name].call(this,{
+            selectValue:this.selectValue,
+            router:IDM.router.getParam(this.moduleObject.routerId)
+          })
+          break;
       }
-    },
-    /**
-     * 交互功能：设置组件的上下文内容值
-     * @param {
-     *  type:"定义的类型，已知类型：pageCommonInterface（页面统一接口返回值）、"
-     *  key:"数据key标识，页面每个接口设置的数据集名称，方便识别获取自己需要的数据"
-     *  data:"数据集，内容为：字符串 or 数组 or 对象"
-     * }
-     */
-    setContextValue(object) {
-      console.log("统一接口设置的值", object);
-      if (object.type != "pageCommonInterface") {
-        return;
-      }
-      //这里使用的是子表，所以要循环匹配所有子表的属性然后再去设置修改默认值
-      this.buttons.forEach((item) => {
-        if (
-          item.textType === "pageCommonInterface" &&
-          object.key === item.dataName
-        ) {
-          item.text = this.getExpressData(
-            item.dataName,
-            item.dataFiled,
-            object.data
-          );
-          item.active = this.getExpressData(
-            item.dataName,
-            item.activeFiled,
-            object.data
-          );
-        }
-      });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-$scale: var(--i-bottom-buttons-scale);
+$scale: var(--i-remote-search-scale);
 
-.i-bottom-buttons-outer {
-  position: fixed;
-  bottom: 0;
-  padding: calc(20px * #{$scale}) calc(12px * #{$scale});
+.i-remote-search-outer {
+  position: relative;
+  padding: calc(10px * #{$scale}) calc(12px * #{$scale});
   background-color: #fff;
-  box-shadow: 0 calc(2px * #{$scale}) calc(12px * #{$scale}) 0
+  box-shadow: 0px calc(2px * #{$scale}) calc(2px * #{$scale}) 0px
     rgba(0, 0, 0, 0.07);
-  color: #666666;
+  color: #999999;
   font-size: calc(14px * #{$scale});
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
-  z-index: 1;
 
-  .i-bottom-buttons-left,
-  .i-bottom-buttons-right {
-    display: flex;
+  ::v-deep .ant-select-selection {
+    background-color: #f2f2f2;
+    border-radius: 100px;
+    border: none;
+  }
 
-    .i-bottom-buttons-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: calc(5px * #{$scale});
-      padding: calc(10px * #{$scale});
-      margin-right: calc(8px * #{$scale});
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      .idm_filed_svg_icon {
-        font-size: 1.1em;
-        width: 1.1em;
-        height: 1.1em;
-        fill: currentColor;
-        vertical-align: -0.15em;
-        outline: none;
-      }
-
-      .item-icon {
-        margin-bottom: calc(4px * #{$scale});
-      }
-
-      &.upDown {
-        flex-direction: column;
-      }
-
-      &.border {
-        border: 1px solid #d4d4d4;
-        padding: calc(10px * #{$scale}) calc(26px * #{$scale});
-
-        .item-icon {
-          margin-bottom: 0;
-          margin-right: calc(6px * #{$scale});
-        }
-      }
-
-      &.active {
-        color: rgb(9, 84, 198);
-      }
-    }
+  .idm_itabs_drag_container {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
 </style>

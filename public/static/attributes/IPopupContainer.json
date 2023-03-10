@@ -225,6 +225,14 @@
           "default": "chooseTag"
         },
         {
+          "type": "actionSelect",
+          "layoutType": "block",
+          "text": "点击页签自定义函数",
+          "desc": "点击页签自定义函数",
+          "bindKey": "customFuncClickTab",
+          "multiple": false
+        },
+        {
           "type": "input",
           "layoutType": "inline",
           "text": "发消息key",

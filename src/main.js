@@ -5,6 +5,7 @@ import config from '../public/static/config.json';
 //引入图标
 import '@/icons' // icon
 //引入vant组件
+import "@/plugins/antd"
 import '@/plugins/vant';
 
 new VueRegister()
