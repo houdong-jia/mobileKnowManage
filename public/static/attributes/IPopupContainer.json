@@ -47,6 +47,14 @@
           "default": "loadcontainer"
         },
         {
+          "type": "switch",
+          "layoutType": "inline",
+          "text": "挂载body",
+          "desc": "挂载到body节点下",
+          "bindKey": "isContainer",
+          "default": false
+        },
+        {
           "type": "select",
           "layoutType": "inline",
           "text": "弹出位置",
