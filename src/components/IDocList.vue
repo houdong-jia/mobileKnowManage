@@ -890,6 +890,7 @@ export default {
           letter-spacing: 0;
           line-height: 22px;
           font-weight: 500;
+          word-break: break-all;
         }
         .tag {
           flex-shrink: 0;
@@ -913,6 +914,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
+        word-break: break-all;
         -webkit-box-orient: vertical;
         p {
           margin: 0;
