@@ -101,6 +101,13 @@
       "className": "IRemoteSearch",
       "comType": "common",
       "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.mobile.ianswerdetail",
+      "comName": "回答详情",
+      "className": "IAnswerDetail",
+      "comType": "common",
+      "comLangue": "vue"
     }
   ]
 }

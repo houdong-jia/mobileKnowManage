@@ -30,8 +30,8 @@
       @change="handleChange"
     >
       <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-      <a-select-option v-for="d in options" :key="d[propData.valueInterface]">
-        {{ d[propData.labelInterface] }}
+      <a-select-option v-for="d in options" :key="d.value" :value="d.value">
+        {{ d.label }}
       </a-select-option>
     </a-select>
     <div
@@ -111,7 +111,6 @@ export default {
     },
     // 请求
     fetchUser(query) {
-      console.log(query);
       this.lastFetchId += 1;
       const fetchId = this.lastFetchId;
       this.fetching = true;
@@ -154,11 +153,16 @@ export default {
         },
         (res) => {
           if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
             return;
           }
+          const data =  res.map(item => {
+            return {
+              value:item[this.propData.valueInterface],
+              label:item[this.propData.labelInterface]
+            }
+          });
+          this.options = data;
           this.fetching = false;
-          this.options = res;
         },
         () => {
           this.fetching = false;

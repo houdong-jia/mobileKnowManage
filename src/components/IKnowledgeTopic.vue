@@ -597,7 +597,7 @@ export default {
             this.propData.listJumpUrl[0].id,
             {
               keep: true,
-              params: item,
+              params:  this.jumpCustomFunc(item) || item,
               enterAnim: '',
               quitAnim: ''
             }
@@ -605,6 +605,10 @@ export default {
       } else {
         IDM.message.warning("请选择要跳转的子页面");
       }
+    },
+    jumpCustomFunc(item){
+      const func = this.propData.jumpCustomFunc?.[0]
+      return func && window[func.name] && window[func.name].call(this,{item,_this:this})
     },
     /**
      * 组件通信：接收消息的方法

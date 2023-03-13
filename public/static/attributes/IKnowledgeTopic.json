@@ -675,6 +675,13 @@
           "desc": "设置视频跳转的页面"
         },
         {
+          "type": "actionSelect",
+          "layoutType": "block",
+          "text": "跳转参数自定义函数",
+          "bindKey": "jumpCustomFunc",
+          "desc": "用户自定义跳转时携带的参数"
+        },
+        {
           "type": "select",
           "layoutType": "inline",
           "text": "刷新KEY",
